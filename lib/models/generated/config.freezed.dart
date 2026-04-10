@@ -1756,6 +1756,556 @@ as ProxyCardType,
 
 
 /// @nodoc
+mixin _$DomainRoutingItem {
+
+ int get id; RuleAction get ruleAction; String get content; String get target; bool get autoSelectLowestDelay;
+/// Create a copy of DomainRoutingItem
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$DomainRoutingItemCopyWith<DomainRoutingItem> get copyWith => _$DomainRoutingItemCopyWithImpl<DomainRoutingItem>(this as DomainRoutingItem, _$identity);
+
+  /// Serializes this DomainRoutingItem to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DomainRoutingItem&&(identical(other.id, id) || other.id == id)&&(identical(other.ruleAction, ruleAction) || other.ruleAction == ruleAction)&&(identical(other.content, content) || other.content == content)&&(identical(other.target, target) || other.target == target)&&(identical(other.autoSelectLowestDelay, autoSelectLowestDelay) || other.autoSelectLowestDelay == autoSelectLowestDelay));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,ruleAction,content,target,autoSelectLowestDelay);
+
+@override
+String toString() {
+  return 'DomainRoutingItem(id: $id, ruleAction: $ruleAction, content: $content, target: $target, autoSelectLowestDelay: $autoSelectLowestDelay)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $DomainRoutingItemCopyWith<$Res>  {
+  factory $DomainRoutingItemCopyWith(DomainRoutingItem value, $Res Function(DomainRoutingItem) _then) = _$DomainRoutingItemCopyWithImpl;
+@useResult
+$Res call({
+ int id, RuleAction ruleAction, String content, String target, bool autoSelectLowestDelay
+});
+
+
+
+
+}
+/// @nodoc
+class _$DomainRoutingItemCopyWithImpl<$Res>
+    implements $DomainRoutingItemCopyWith<$Res> {
+  _$DomainRoutingItemCopyWithImpl(this._self, this._then);
+
+  final DomainRoutingItem _self;
+  final $Res Function(DomainRoutingItem) _then;
+
+/// Create a copy of DomainRoutingItem
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? ruleAction = null,Object? content = null,Object? target = null,Object? autoSelectLowestDelay = null,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,ruleAction: null == ruleAction ? _self.ruleAction : ruleAction // ignore: cast_nullable_to_non_nullable
+as RuleAction,content: null == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
+as String,target: null == target ? _self.target : target // ignore: cast_nullable_to_non_nullable
+as String,autoSelectLowestDelay: null == autoSelectLowestDelay ? _self.autoSelectLowestDelay : autoSelectLowestDelay // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [DomainRoutingItem].
+extension DomainRoutingItemPatterns on DomainRoutingItem {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _DomainRoutingItem value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _DomainRoutingItem() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _DomainRoutingItem value)  $default,){
+final _that = this;
+switch (_that) {
+case _DomainRoutingItem():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _DomainRoutingItem value)?  $default,){
+final _that = this;
+switch (_that) {
+case _DomainRoutingItem() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  RuleAction ruleAction,  String content,  String target,  bool autoSelectLowestDelay)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _DomainRoutingItem() when $default != null:
+return $default(_that.id,_that.ruleAction,_that.content,_that.target,_that.autoSelectLowestDelay);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  RuleAction ruleAction,  String content,  String target,  bool autoSelectLowestDelay)  $default,) {final _that = this;
+switch (_that) {
+case _DomainRoutingItem():
+return $default(_that.id,_that.ruleAction,_that.content,_that.target,_that.autoSelectLowestDelay);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  RuleAction ruleAction,  String content,  String target,  bool autoSelectLowestDelay)?  $default,) {final _that = this;
+switch (_that) {
+case _DomainRoutingItem() when $default != null:
+return $default(_that.id,_that.ruleAction,_that.content,_that.target,_that.autoSelectLowestDelay);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _DomainRoutingItem implements DomainRoutingItem {
+  const _DomainRoutingItem({required this.id, required this.ruleAction, required this.content, required this.target, this.autoSelectLowestDelay = false});
+  factory _DomainRoutingItem.fromJson(Map<String, dynamic> json) => _$DomainRoutingItemFromJson(json);
+
+@override final  int id;
+@override final  RuleAction ruleAction;
+@override final  String content;
+@override final  String target;
+@override@JsonKey() final  bool autoSelectLowestDelay;
+
+/// Create a copy of DomainRoutingItem
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$DomainRoutingItemCopyWith<_DomainRoutingItem> get copyWith => __$DomainRoutingItemCopyWithImpl<_DomainRoutingItem>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$DomainRoutingItemToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DomainRoutingItem&&(identical(other.id, id) || other.id == id)&&(identical(other.ruleAction, ruleAction) || other.ruleAction == ruleAction)&&(identical(other.content, content) || other.content == content)&&(identical(other.target, target) || other.target == target)&&(identical(other.autoSelectLowestDelay, autoSelectLowestDelay) || other.autoSelectLowestDelay == autoSelectLowestDelay));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,ruleAction,content,target,autoSelectLowestDelay);
+
+@override
+String toString() {
+  return 'DomainRoutingItem(id: $id, ruleAction: $ruleAction, content: $content, target: $target, autoSelectLowestDelay: $autoSelectLowestDelay)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$DomainRoutingItemCopyWith<$Res> implements $DomainRoutingItemCopyWith<$Res> {
+  factory _$DomainRoutingItemCopyWith(_DomainRoutingItem value, $Res Function(_DomainRoutingItem) _then) = __$DomainRoutingItemCopyWithImpl;
+@override @useResult
+$Res call({
+ int id, RuleAction ruleAction, String content, String target, bool autoSelectLowestDelay
+});
+
+
+
+
+}
+/// @nodoc
+class __$DomainRoutingItemCopyWithImpl<$Res>
+    implements _$DomainRoutingItemCopyWith<$Res> {
+  __$DomainRoutingItemCopyWithImpl(this._self, this._then);
+
+  final _DomainRoutingItem _self;
+  final $Res Function(_DomainRoutingItem) _then;
+
+/// Create a copy of DomainRoutingItem
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? ruleAction = null,Object? content = null,Object? target = null,Object? autoSelectLowestDelay = null,}) {
+  return _then(_DomainRoutingItem(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,ruleAction: null == ruleAction ? _self.ruleAction : ruleAction // ignore: cast_nullable_to_non_nullable
+as RuleAction,content: null == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
+as String,target: null == target ? _self.target : target // ignore: cast_nullable_to_non_nullable
+as String,autoSelectLowestDelay: null == autoSelectLowestDelay ? _self.autoSelectLowestDelay : autoSelectLowestDelay // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$DomainRoutingProps {
+
+ List<DomainRoutingItem> get items; int get refreshIntervalSeconds; int get minSwitchIntervalSeconds;
+/// Create a copy of DomainRoutingProps
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$DomainRoutingPropsCopyWith<DomainRoutingProps> get copyWith => _$DomainRoutingPropsCopyWithImpl<DomainRoutingProps>(this as DomainRoutingProps, _$identity);
+
+  /// Serializes this DomainRoutingProps to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DomainRoutingProps&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.refreshIntervalSeconds, refreshIntervalSeconds) || other.refreshIntervalSeconds == refreshIntervalSeconds)&&(identical(other.minSwitchIntervalSeconds, minSwitchIntervalSeconds) || other.minSwitchIntervalSeconds == minSwitchIntervalSeconds));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(items),refreshIntervalSeconds,minSwitchIntervalSeconds);
+
+@override
+String toString() {
+  return 'DomainRoutingProps(items: $items, refreshIntervalSeconds: $refreshIntervalSeconds, minSwitchIntervalSeconds: $minSwitchIntervalSeconds)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $DomainRoutingPropsCopyWith<$Res>  {
+  factory $DomainRoutingPropsCopyWith(DomainRoutingProps value, $Res Function(DomainRoutingProps) _then) = _$DomainRoutingPropsCopyWithImpl;
+@useResult
+$Res call({
+ List<DomainRoutingItem> items, int refreshIntervalSeconds, int minSwitchIntervalSeconds
+});
+
+
+
+
+}
+/// @nodoc
+class _$DomainRoutingPropsCopyWithImpl<$Res>
+    implements $DomainRoutingPropsCopyWith<$Res> {
+  _$DomainRoutingPropsCopyWithImpl(this._self, this._then);
+
+  final DomainRoutingProps _self;
+  final $Res Function(DomainRoutingProps) _then;
+
+/// Create a copy of DomainRoutingProps
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? items = null,Object? refreshIntervalSeconds = null,Object? minSwitchIntervalSeconds = null,}) {
+  return _then(_self.copyWith(
+items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
+as List<DomainRoutingItem>,refreshIntervalSeconds: null == refreshIntervalSeconds ? _self.refreshIntervalSeconds : refreshIntervalSeconds // ignore: cast_nullable_to_non_nullable
+as int,minSwitchIntervalSeconds: null == minSwitchIntervalSeconds ? _self.minSwitchIntervalSeconds : minSwitchIntervalSeconds // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [DomainRoutingProps].
+extension DomainRoutingPropsPatterns on DomainRoutingProps {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _DomainRoutingProps value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _DomainRoutingProps() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _DomainRoutingProps value)  $default,){
+final _that = this;
+switch (_that) {
+case _DomainRoutingProps():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _DomainRoutingProps value)?  $default,){
+final _that = this;
+switch (_that) {
+case _DomainRoutingProps() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<DomainRoutingItem> items,  int refreshIntervalSeconds,  int minSwitchIntervalSeconds)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _DomainRoutingProps() when $default != null:
+return $default(_that.items,_that.refreshIntervalSeconds,_that.minSwitchIntervalSeconds);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<DomainRoutingItem> items,  int refreshIntervalSeconds,  int minSwitchIntervalSeconds)  $default,) {final _that = this;
+switch (_that) {
+case _DomainRoutingProps():
+return $default(_that.items,_that.refreshIntervalSeconds,_that.minSwitchIntervalSeconds);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<DomainRoutingItem> items,  int refreshIntervalSeconds,  int minSwitchIntervalSeconds)?  $default,) {final _that = this;
+switch (_that) {
+case _DomainRoutingProps() when $default != null:
+return $default(_that.items,_that.refreshIntervalSeconds,_that.minSwitchIntervalSeconds);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _DomainRoutingProps implements DomainRoutingProps {
+  const _DomainRoutingProps({final  List<DomainRoutingItem> items = const [], this.refreshIntervalSeconds = 60, this.minSwitchIntervalSeconds = 300}): _items = items;
+  factory _DomainRoutingProps.fromJson(Map<String, dynamic> json) => _$DomainRoutingPropsFromJson(json);
+
+ final  List<DomainRoutingItem> _items;
+@override@JsonKey() List<DomainRoutingItem> get items {
+  if (_items is EqualUnmodifiableListView) return _items;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_items);
+}
+
+@override@JsonKey() final  int refreshIntervalSeconds;
+@override@JsonKey() final  int minSwitchIntervalSeconds;
+
+/// Create a copy of DomainRoutingProps
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$DomainRoutingPropsCopyWith<_DomainRoutingProps> get copyWith => __$DomainRoutingPropsCopyWithImpl<_DomainRoutingProps>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$DomainRoutingPropsToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DomainRoutingProps&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.refreshIntervalSeconds, refreshIntervalSeconds) || other.refreshIntervalSeconds == refreshIntervalSeconds)&&(identical(other.minSwitchIntervalSeconds, minSwitchIntervalSeconds) || other.minSwitchIntervalSeconds == minSwitchIntervalSeconds));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_items),refreshIntervalSeconds,minSwitchIntervalSeconds);
+
+@override
+String toString() {
+  return 'DomainRoutingProps(items: $items, refreshIntervalSeconds: $refreshIntervalSeconds, minSwitchIntervalSeconds: $minSwitchIntervalSeconds)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$DomainRoutingPropsCopyWith<$Res> implements $DomainRoutingPropsCopyWith<$Res> {
+  factory _$DomainRoutingPropsCopyWith(_DomainRoutingProps value, $Res Function(_DomainRoutingProps) _then) = __$DomainRoutingPropsCopyWithImpl;
+@override @useResult
+$Res call({
+ List<DomainRoutingItem> items, int refreshIntervalSeconds, int minSwitchIntervalSeconds
+});
+
+
+
+
+}
+/// @nodoc
+class __$DomainRoutingPropsCopyWithImpl<$Res>
+    implements _$DomainRoutingPropsCopyWith<$Res> {
+  __$DomainRoutingPropsCopyWithImpl(this._self, this._then);
+
+  final _DomainRoutingProps _self;
+  final $Res Function(_DomainRoutingProps) _then;
+
+/// Create a copy of DomainRoutingProps
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? items = null,Object? refreshIntervalSeconds = null,Object? minSwitchIntervalSeconds = null,}) {
+  return _then(_DomainRoutingProps(
+items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
+as List<DomainRoutingItem>,refreshIntervalSeconds: null == refreshIntervalSeconds ? _self.refreshIntervalSeconds : refreshIntervalSeconds // ignore: cast_nullable_to_non_nullable
+as int,minSwitchIntervalSeconds: null == minSwitchIntervalSeconds ? _self.minSwitchIntervalSeconds : minSwitchIntervalSeconds // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
 mixin _$TextScale {
 
  bool get enable; double get scale;
@@ -2326,7 +2876,7 @@ $TextScaleCopyWith<$Res> get textScale {
 /// @nodoc
 mixin _$Config {
 
- int? get currentProfileId; bool get overrideDns; List<HotKeyAction> get hotKeyActions;@JsonKey(fromJson: AppSettingProps.safeFromJson) AppSettingProps get appSettingProps; DAVProps? get davProps; NetworkProps get networkProps; VpnProps get vpnProps;@JsonKey(fromJson: ThemeProps.safeFromJson) ThemeProps get themeProps; ProxiesStyleProps get proxiesStyleProps; WindowProps get windowProps; ClashConfig get patchClashConfig;
+ int? get currentProfileId; bool get overrideDns; List<HotKeyAction> get hotKeyActions;@JsonKey(fromJson: AppSettingProps.safeFromJson) AppSettingProps get appSettingProps; DAVProps? get davProps; NetworkProps get networkProps; VpnProps get vpnProps;@JsonKey(fromJson: ThemeProps.safeFromJson) ThemeProps get themeProps; ProxiesStyleProps get proxiesStyleProps; WindowProps get windowProps; DomainRoutingProps get domainRoutingProps; ClashConfig get patchClashConfig;
 /// Create a copy of Config
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -2339,16 +2889,16 @@ $ConfigCopyWith<Config> get copyWith => _$ConfigCopyWithImpl<Config>(this as Con
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Config&&(identical(other.currentProfileId, currentProfileId) || other.currentProfileId == currentProfileId)&&(identical(other.overrideDns, overrideDns) || other.overrideDns == overrideDns)&&const DeepCollectionEquality().equals(other.hotKeyActions, hotKeyActions)&&(identical(other.appSettingProps, appSettingProps) || other.appSettingProps == appSettingProps)&&(identical(other.davProps, davProps) || other.davProps == davProps)&&(identical(other.networkProps, networkProps) || other.networkProps == networkProps)&&(identical(other.vpnProps, vpnProps) || other.vpnProps == vpnProps)&&(identical(other.themeProps, themeProps) || other.themeProps == themeProps)&&(identical(other.proxiesStyleProps, proxiesStyleProps) || other.proxiesStyleProps == proxiesStyleProps)&&(identical(other.windowProps, windowProps) || other.windowProps == windowProps)&&(identical(other.patchClashConfig, patchClashConfig) || other.patchClashConfig == patchClashConfig));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Config&&(identical(other.currentProfileId, currentProfileId) || other.currentProfileId == currentProfileId)&&(identical(other.overrideDns, overrideDns) || other.overrideDns == overrideDns)&&const DeepCollectionEquality().equals(other.hotKeyActions, hotKeyActions)&&(identical(other.appSettingProps, appSettingProps) || other.appSettingProps == appSettingProps)&&(identical(other.davProps, davProps) || other.davProps == davProps)&&(identical(other.networkProps, networkProps) || other.networkProps == networkProps)&&(identical(other.vpnProps, vpnProps) || other.vpnProps == vpnProps)&&(identical(other.themeProps, themeProps) || other.themeProps == themeProps)&&(identical(other.proxiesStyleProps, proxiesStyleProps) || other.proxiesStyleProps == proxiesStyleProps)&&(identical(other.windowProps, windowProps) || other.windowProps == windowProps)&&(identical(other.domainRoutingProps, domainRoutingProps) || other.domainRoutingProps == domainRoutingProps)&&(identical(other.patchClashConfig, patchClashConfig) || other.patchClashConfig == patchClashConfig));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,currentProfileId,overrideDns,const DeepCollectionEquality().hash(hotKeyActions),appSettingProps,davProps,networkProps,vpnProps,themeProps,proxiesStyleProps,windowProps,patchClashConfig);
+int get hashCode => Object.hash(runtimeType,currentProfileId,overrideDns,const DeepCollectionEquality().hash(hotKeyActions),appSettingProps,davProps,networkProps,vpnProps,themeProps,proxiesStyleProps,windowProps,domainRoutingProps,patchClashConfig);
 
 @override
 String toString() {
-  return 'Config(currentProfileId: $currentProfileId, overrideDns: $overrideDns, hotKeyActions: $hotKeyActions, appSettingProps: $appSettingProps, davProps: $davProps, networkProps: $networkProps, vpnProps: $vpnProps, themeProps: $themeProps, proxiesStyleProps: $proxiesStyleProps, windowProps: $windowProps, patchClashConfig: $patchClashConfig)';
+  return 'Config(currentProfileId: $currentProfileId, overrideDns: $overrideDns, hotKeyActions: $hotKeyActions, appSettingProps: $appSettingProps, davProps: $davProps, networkProps: $networkProps, vpnProps: $vpnProps, themeProps: $themeProps, proxiesStyleProps: $proxiesStyleProps, windowProps: $windowProps, domainRoutingProps: $domainRoutingProps, patchClashConfig: $patchClashConfig)';
 }
 
 
@@ -2359,11 +2909,11 @@ abstract mixin class $ConfigCopyWith<$Res>  {
   factory $ConfigCopyWith(Config value, $Res Function(Config) _then) = _$ConfigCopyWithImpl;
 @useResult
 $Res call({
- int? currentProfileId, bool overrideDns, List<HotKeyAction> hotKeyActions,@JsonKey(fromJson: AppSettingProps.safeFromJson) AppSettingProps appSettingProps, DAVProps? davProps, NetworkProps networkProps, VpnProps vpnProps,@JsonKey(fromJson: ThemeProps.safeFromJson) ThemeProps themeProps, ProxiesStyleProps proxiesStyleProps, WindowProps windowProps, ClashConfig patchClashConfig
+ int? currentProfileId, bool overrideDns, List<HotKeyAction> hotKeyActions,@JsonKey(fromJson: AppSettingProps.safeFromJson) AppSettingProps appSettingProps, DAVProps? davProps, NetworkProps networkProps, VpnProps vpnProps,@JsonKey(fromJson: ThemeProps.safeFromJson) ThemeProps themeProps, ProxiesStyleProps proxiesStyleProps, WindowProps windowProps, DomainRoutingProps domainRoutingProps, ClashConfig patchClashConfig
 });
 
 
-$AppSettingPropsCopyWith<$Res> get appSettingProps;$DAVPropsCopyWith<$Res>? get davProps;$NetworkPropsCopyWith<$Res> get networkProps;$VpnPropsCopyWith<$Res> get vpnProps;$ThemePropsCopyWith<$Res> get themeProps;$ProxiesStylePropsCopyWith<$Res> get proxiesStyleProps;$WindowPropsCopyWith<$Res> get windowProps;$ClashConfigCopyWith<$Res> get patchClashConfig;
+$AppSettingPropsCopyWith<$Res> get appSettingProps;$DAVPropsCopyWith<$Res>? get davProps;$NetworkPropsCopyWith<$Res> get networkProps;$VpnPropsCopyWith<$Res> get vpnProps;$ThemePropsCopyWith<$Res> get themeProps;$ProxiesStylePropsCopyWith<$Res> get proxiesStyleProps;$WindowPropsCopyWith<$Res> get windowProps;$DomainRoutingPropsCopyWith<$Res> get domainRoutingProps;$ClashConfigCopyWith<$Res> get patchClashConfig;
 
 }
 /// @nodoc
@@ -2376,7 +2926,7 @@ class _$ConfigCopyWithImpl<$Res>
 
 /// Create a copy of Config
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? currentProfileId = freezed,Object? overrideDns = null,Object? hotKeyActions = null,Object? appSettingProps = null,Object? davProps = freezed,Object? networkProps = null,Object? vpnProps = null,Object? themeProps = null,Object? proxiesStyleProps = null,Object? windowProps = null,Object? patchClashConfig = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? currentProfileId = freezed,Object? overrideDns = null,Object? hotKeyActions = null,Object? appSettingProps = null,Object? davProps = freezed,Object? networkProps = null,Object? vpnProps = null,Object? themeProps = null,Object? proxiesStyleProps = null,Object? windowProps = null,Object? domainRoutingProps = null,Object? patchClashConfig = null,}) {
   return _then(_self.copyWith(
 currentProfileId: freezed == currentProfileId ? _self.currentProfileId : currentProfileId // ignore: cast_nullable_to_non_nullable
 as int?,overrideDns: null == overrideDns ? _self.overrideDns : overrideDns // ignore: cast_nullable_to_non_nullable
@@ -2388,7 +2938,8 @@ as NetworkProps,vpnProps: null == vpnProps ? _self.vpnProps : vpnProps // ignore
 as VpnProps,themeProps: null == themeProps ? _self.themeProps : themeProps // ignore: cast_nullable_to_non_nullable
 as ThemeProps,proxiesStyleProps: null == proxiesStyleProps ? _self.proxiesStyleProps : proxiesStyleProps // ignore: cast_nullable_to_non_nullable
 as ProxiesStyleProps,windowProps: null == windowProps ? _self.windowProps : windowProps // ignore: cast_nullable_to_non_nullable
-as WindowProps,patchClashConfig: null == patchClashConfig ? _self.patchClashConfig : patchClashConfig // ignore: cast_nullable_to_non_nullable
+as WindowProps,domainRoutingProps: null == domainRoutingProps ? _self.domainRoutingProps : domainRoutingProps // ignore: cast_nullable_to_non_nullable
+as DomainRoutingProps,patchClashConfig: null == patchClashConfig ? _self.patchClashConfig : patchClashConfig // ignore: cast_nullable_to_non_nullable
 as ClashConfig,
   ));
 }
@@ -2457,6 +3008,15 @@ $WindowPropsCopyWith<$Res> get windowProps {
   
   return $WindowPropsCopyWith<$Res>(_self.windowProps, (value) {
     return _then(_self.copyWith(windowProps: value));
+  });
+}/// Create a copy of Config
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$DomainRoutingPropsCopyWith<$Res> get domainRoutingProps {
+  
+  return $DomainRoutingPropsCopyWith<$Res>(_self.domainRoutingProps, (value) {
+    return _then(_self.copyWith(domainRoutingProps: value));
   });
 }/// Create a copy of Config
 /// with the given fields replaced by the non-null parameter values.
@@ -2549,10 +3109,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? currentProfileId,  bool overrideDns,  List<HotKeyAction> hotKeyActions, @JsonKey(fromJson: AppSettingProps.safeFromJson)  AppSettingProps appSettingProps,  DAVProps? davProps,  NetworkProps networkProps,  VpnProps vpnProps, @JsonKey(fromJson: ThemeProps.safeFromJson)  ThemeProps themeProps,  ProxiesStyleProps proxiesStyleProps,  WindowProps windowProps,  ClashConfig patchClashConfig)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? currentProfileId,  bool overrideDns,  List<HotKeyAction> hotKeyActions, @JsonKey(fromJson: AppSettingProps.safeFromJson)  AppSettingProps appSettingProps,  DAVProps? davProps,  NetworkProps networkProps,  VpnProps vpnProps, @JsonKey(fromJson: ThemeProps.safeFromJson)  ThemeProps themeProps,  ProxiesStyleProps proxiesStyleProps,  WindowProps windowProps,  DomainRoutingProps domainRoutingProps,  ClashConfig patchClashConfig)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Config() when $default != null:
-return $default(_that.currentProfileId,_that.overrideDns,_that.hotKeyActions,_that.appSettingProps,_that.davProps,_that.networkProps,_that.vpnProps,_that.themeProps,_that.proxiesStyleProps,_that.windowProps,_that.patchClashConfig);case _:
+return $default(_that.currentProfileId,_that.overrideDns,_that.hotKeyActions,_that.appSettingProps,_that.davProps,_that.networkProps,_that.vpnProps,_that.themeProps,_that.proxiesStyleProps,_that.windowProps,_that.domainRoutingProps,_that.patchClashConfig);case _:
   return orElse();
 
 }
@@ -2570,10 +3130,10 @@ return $default(_that.currentProfileId,_that.overrideDns,_that.hotKeyActions,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? currentProfileId,  bool overrideDns,  List<HotKeyAction> hotKeyActions, @JsonKey(fromJson: AppSettingProps.safeFromJson)  AppSettingProps appSettingProps,  DAVProps? davProps,  NetworkProps networkProps,  VpnProps vpnProps, @JsonKey(fromJson: ThemeProps.safeFromJson)  ThemeProps themeProps,  ProxiesStyleProps proxiesStyleProps,  WindowProps windowProps,  ClashConfig patchClashConfig)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? currentProfileId,  bool overrideDns,  List<HotKeyAction> hotKeyActions, @JsonKey(fromJson: AppSettingProps.safeFromJson)  AppSettingProps appSettingProps,  DAVProps? davProps,  NetworkProps networkProps,  VpnProps vpnProps, @JsonKey(fromJson: ThemeProps.safeFromJson)  ThemeProps themeProps,  ProxiesStyleProps proxiesStyleProps,  WindowProps windowProps,  DomainRoutingProps domainRoutingProps,  ClashConfig patchClashConfig)  $default,) {final _that = this;
 switch (_that) {
 case _Config():
-return $default(_that.currentProfileId,_that.overrideDns,_that.hotKeyActions,_that.appSettingProps,_that.davProps,_that.networkProps,_that.vpnProps,_that.themeProps,_that.proxiesStyleProps,_that.windowProps,_that.patchClashConfig);case _:
+return $default(_that.currentProfileId,_that.overrideDns,_that.hotKeyActions,_that.appSettingProps,_that.davProps,_that.networkProps,_that.vpnProps,_that.themeProps,_that.proxiesStyleProps,_that.windowProps,_that.domainRoutingProps,_that.patchClashConfig);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -2590,10 +3150,10 @@ return $default(_that.currentProfileId,_that.overrideDns,_that.hotKeyActions,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? currentProfileId,  bool overrideDns,  List<HotKeyAction> hotKeyActions, @JsonKey(fromJson: AppSettingProps.safeFromJson)  AppSettingProps appSettingProps,  DAVProps? davProps,  NetworkProps networkProps,  VpnProps vpnProps, @JsonKey(fromJson: ThemeProps.safeFromJson)  ThemeProps themeProps,  ProxiesStyleProps proxiesStyleProps,  WindowProps windowProps,  ClashConfig patchClashConfig)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? currentProfileId,  bool overrideDns,  List<HotKeyAction> hotKeyActions, @JsonKey(fromJson: AppSettingProps.safeFromJson)  AppSettingProps appSettingProps,  DAVProps? davProps,  NetworkProps networkProps,  VpnProps vpnProps, @JsonKey(fromJson: ThemeProps.safeFromJson)  ThemeProps themeProps,  ProxiesStyleProps proxiesStyleProps,  WindowProps windowProps,  DomainRoutingProps domainRoutingProps,  ClashConfig patchClashConfig)?  $default,) {final _that = this;
 switch (_that) {
 case _Config() when $default != null:
-return $default(_that.currentProfileId,_that.overrideDns,_that.hotKeyActions,_that.appSettingProps,_that.davProps,_that.networkProps,_that.vpnProps,_that.themeProps,_that.proxiesStyleProps,_that.windowProps,_that.patchClashConfig);case _:
+return $default(_that.currentProfileId,_that.overrideDns,_that.hotKeyActions,_that.appSettingProps,_that.davProps,_that.networkProps,_that.vpnProps,_that.themeProps,_that.proxiesStyleProps,_that.windowProps,_that.domainRoutingProps,_that.patchClashConfig);case _:
   return null;
 
 }
@@ -2605,7 +3165,7 @@ return $default(_that.currentProfileId,_that.overrideDns,_that.hotKeyActions,_th
 @JsonSerializable()
 
 class _Config implements Config {
-  const _Config({this.currentProfileId, this.overrideDns = false, final  List<HotKeyAction> hotKeyActions = const [], @JsonKey(fromJson: AppSettingProps.safeFromJson) this.appSettingProps = defaultAppSettingProps, this.davProps, this.networkProps = defaultNetworkProps, this.vpnProps = defaultVpnProps, @JsonKey(fromJson: ThemeProps.safeFromJson) required this.themeProps, this.proxiesStyleProps = defaultProxiesStyleProps, this.windowProps = defaultWindowProps, this.patchClashConfig = defaultClashConfig}): _hotKeyActions = hotKeyActions;
+  const _Config({this.currentProfileId, this.overrideDns = false, final  List<HotKeyAction> hotKeyActions = const [], @JsonKey(fromJson: AppSettingProps.safeFromJson) this.appSettingProps = defaultAppSettingProps, this.davProps, this.networkProps = defaultNetworkProps, this.vpnProps = defaultVpnProps, @JsonKey(fromJson: ThemeProps.safeFromJson) required this.themeProps, this.proxiesStyleProps = defaultProxiesStyleProps, this.windowProps = defaultWindowProps, this.domainRoutingProps = defaultDomainRoutingProps, this.patchClashConfig = defaultClashConfig}): _hotKeyActions = hotKeyActions;
   factory _Config.fromJson(Map<String, dynamic> json) => _$ConfigFromJson(json);
 
 @override final  int? currentProfileId;
@@ -2624,6 +3184,7 @@ class _Config implements Config {
 @override@JsonKey(fromJson: ThemeProps.safeFromJson) final  ThemeProps themeProps;
 @override@JsonKey() final  ProxiesStyleProps proxiesStyleProps;
 @override@JsonKey() final  WindowProps windowProps;
+@override@JsonKey() final  DomainRoutingProps domainRoutingProps;
 @override@JsonKey() final  ClashConfig patchClashConfig;
 
 /// Create a copy of Config
@@ -2639,16 +3200,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Config&&(identical(other.currentProfileId, currentProfileId) || other.currentProfileId == currentProfileId)&&(identical(other.overrideDns, overrideDns) || other.overrideDns == overrideDns)&&const DeepCollectionEquality().equals(other._hotKeyActions, _hotKeyActions)&&(identical(other.appSettingProps, appSettingProps) || other.appSettingProps == appSettingProps)&&(identical(other.davProps, davProps) || other.davProps == davProps)&&(identical(other.networkProps, networkProps) || other.networkProps == networkProps)&&(identical(other.vpnProps, vpnProps) || other.vpnProps == vpnProps)&&(identical(other.themeProps, themeProps) || other.themeProps == themeProps)&&(identical(other.proxiesStyleProps, proxiesStyleProps) || other.proxiesStyleProps == proxiesStyleProps)&&(identical(other.windowProps, windowProps) || other.windowProps == windowProps)&&(identical(other.patchClashConfig, patchClashConfig) || other.patchClashConfig == patchClashConfig));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Config&&(identical(other.currentProfileId, currentProfileId) || other.currentProfileId == currentProfileId)&&(identical(other.overrideDns, overrideDns) || other.overrideDns == overrideDns)&&const DeepCollectionEquality().equals(other._hotKeyActions, _hotKeyActions)&&(identical(other.appSettingProps, appSettingProps) || other.appSettingProps == appSettingProps)&&(identical(other.davProps, davProps) || other.davProps == davProps)&&(identical(other.networkProps, networkProps) || other.networkProps == networkProps)&&(identical(other.vpnProps, vpnProps) || other.vpnProps == vpnProps)&&(identical(other.themeProps, themeProps) || other.themeProps == themeProps)&&(identical(other.proxiesStyleProps, proxiesStyleProps) || other.proxiesStyleProps == proxiesStyleProps)&&(identical(other.windowProps, windowProps) || other.windowProps == windowProps)&&(identical(other.domainRoutingProps, domainRoutingProps) || other.domainRoutingProps == domainRoutingProps)&&(identical(other.patchClashConfig, patchClashConfig) || other.patchClashConfig == patchClashConfig));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,currentProfileId,overrideDns,const DeepCollectionEquality().hash(_hotKeyActions),appSettingProps,davProps,networkProps,vpnProps,themeProps,proxiesStyleProps,windowProps,patchClashConfig);
+int get hashCode => Object.hash(runtimeType,currentProfileId,overrideDns,const DeepCollectionEquality().hash(_hotKeyActions),appSettingProps,davProps,networkProps,vpnProps,themeProps,proxiesStyleProps,windowProps,domainRoutingProps,patchClashConfig);
 
 @override
 String toString() {
-  return 'Config(currentProfileId: $currentProfileId, overrideDns: $overrideDns, hotKeyActions: $hotKeyActions, appSettingProps: $appSettingProps, davProps: $davProps, networkProps: $networkProps, vpnProps: $vpnProps, themeProps: $themeProps, proxiesStyleProps: $proxiesStyleProps, windowProps: $windowProps, patchClashConfig: $patchClashConfig)';
+  return 'Config(currentProfileId: $currentProfileId, overrideDns: $overrideDns, hotKeyActions: $hotKeyActions, appSettingProps: $appSettingProps, davProps: $davProps, networkProps: $networkProps, vpnProps: $vpnProps, themeProps: $themeProps, proxiesStyleProps: $proxiesStyleProps, windowProps: $windowProps, domainRoutingProps: $domainRoutingProps, patchClashConfig: $patchClashConfig)';
 }
 
 
@@ -2659,11 +3220,11 @@ abstract mixin class _$ConfigCopyWith<$Res> implements $ConfigCopyWith<$Res> {
   factory _$ConfigCopyWith(_Config value, $Res Function(_Config) _then) = __$ConfigCopyWithImpl;
 @override @useResult
 $Res call({
- int? currentProfileId, bool overrideDns, List<HotKeyAction> hotKeyActions,@JsonKey(fromJson: AppSettingProps.safeFromJson) AppSettingProps appSettingProps, DAVProps? davProps, NetworkProps networkProps, VpnProps vpnProps,@JsonKey(fromJson: ThemeProps.safeFromJson) ThemeProps themeProps, ProxiesStyleProps proxiesStyleProps, WindowProps windowProps, ClashConfig patchClashConfig
+ int? currentProfileId, bool overrideDns, List<HotKeyAction> hotKeyActions,@JsonKey(fromJson: AppSettingProps.safeFromJson) AppSettingProps appSettingProps, DAVProps? davProps, NetworkProps networkProps, VpnProps vpnProps,@JsonKey(fromJson: ThemeProps.safeFromJson) ThemeProps themeProps, ProxiesStyleProps proxiesStyleProps, WindowProps windowProps, DomainRoutingProps domainRoutingProps, ClashConfig patchClashConfig
 });
 
 
-@override $AppSettingPropsCopyWith<$Res> get appSettingProps;@override $DAVPropsCopyWith<$Res>? get davProps;@override $NetworkPropsCopyWith<$Res> get networkProps;@override $VpnPropsCopyWith<$Res> get vpnProps;@override $ThemePropsCopyWith<$Res> get themeProps;@override $ProxiesStylePropsCopyWith<$Res> get proxiesStyleProps;@override $WindowPropsCopyWith<$Res> get windowProps;@override $ClashConfigCopyWith<$Res> get patchClashConfig;
+@override $AppSettingPropsCopyWith<$Res> get appSettingProps;@override $DAVPropsCopyWith<$Res>? get davProps;@override $NetworkPropsCopyWith<$Res> get networkProps;@override $VpnPropsCopyWith<$Res> get vpnProps;@override $ThemePropsCopyWith<$Res> get themeProps;@override $ProxiesStylePropsCopyWith<$Res> get proxiesStyleProps;@override $WindowPropsCopyWith<$Res> get windowProps;@override $DomainRoutingPropsCopyWith<$Res> get domainRoutingProps;@override $ClashConfigCopyWith<$Res> get patchClashConfig;
 
 }
 /// @nodoc
@@ -2676,7 +3237,7 @@ class __$ConfigCopyWithImpl<$Res>
 
 /// Create a copy of Config
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? currentProfileId = freezed,Object? overrideDns = null,Object? hotKeyActions = null,Object? appSettingProps = null,Object? davProps = freezed,Object? networkProps = null,Object? vpnProps = null,Object? themeProps = null,Object? proxiesStyleProps = null,Object? windowProps = null,Object? patchClashConfig = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? currentProfileId = freezed,Object? overrideDns = null,Object? hotKeyActions = null,Object? appSettingProps = null,Object? davProps = freezed,Object? networkProps = null,Object? vpnProps = null,Object? themeProps = null,Object? proxiesStyleProps = null,Object? windowProps = null,Object? domainRoutingProps = null,Object? patchClashConfig = null,}) {
   return _then(_Config(
 currentProfileId: freezed == currentProfileId ? _self.currentProfileId : currentProfileId // ignore: cast_nullable_to_non_nullable
 as int?,overrideDns: null == overrideDns ? _self.overrideDns : overrideDns // ignore: cast_nullable_to_non_nullable
@@ -2688,7 +3249,8 @@ as NetworkProps,vpnProps: null == vpnProps ? _self.vpnProps : vpnProps // ignore
 as VpnProps,themeProps: null == themeProps ? _self.themeProps : themeProps // ignore: cast_nullable_to_non_nullable
 as ThemeProps,proxiesStyleProps: null == proxiesStyleProps ? _self.proxiesStyleProps : proxiesStyleProps // ignore: cast_nullable_to_non_nullable
 as ProxiesStyleProps,windowProps: null == windowProps ? _self.windowProps : windowProps // ignore: cast_nullable_to_non_nullable
-as WindowProps,patchClashConfig: null == patchClashConfig ? _self.patchClashConfig : patchClashConfig // ignore: cast_nullable_to_non_nullable
+as WindowProps,domainRoutingProps: null == domainRoutingProps ? _self.domainRoutingProps : domainRoutingProps // ignore: cast_nullable_to_non_nullable
+as DomainRoutingProps,patchClashConfig: null == patchClashConfig ? _self.patchClashConfig : patchClashConfig // ignore: cast_nullable_to_non_nullable
 as ClashConfig,
   ));
 }
@@ -2758,6 +3320,15 @@ $WindowPropsCopyWith<$Res> get windowProps {
   
   return $WindowPropsCopyWith<$Res>(_self.windowProps, (value) {
     return _then(_self.copyWith(windowProps: value));
+  });
+}/// Create a copy of Config
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$DomainRoutingPropsCopyWith<$Res> get domainRoutingProps {
+  
+  return $DomainRoutingPropsCopyWith<$Res>(_self.domainRoutingProps, (value) {
+    return _then(_self.copyWith(domainRoutingProps: value));
   });
 }/// Create a copy of Config
 /// with the given fields replaced by the non-null parameter values.

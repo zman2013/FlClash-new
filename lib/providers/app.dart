@@ -232,6 +232,37 @@ class DelayDataSource extends _$DelayDataSource with AutoDisposeNotifierMixin {
 }
 
 @Riverpod(keepAlive: true)
+class DomainStatuses extends _$DomainStatuses with AutoDisposeNotifierMixin {
+  @override
+  Map<int, DomainRuntimeStatus> build() {
+    return {};
+  }
+
+  void put(int id, DomainRuntimeStatus status) {
+    if (state[id] == status) {
+      return;
+    }
+    value = Map<int, DomainRuntimeStatus>.from(state)..[id] = status;
+  }
+
+  void removeMissing(Iterable<int> ids) {
+    final idSet = ids.toSet();
+    final nextState = Map<int, DomainRuntimeStatus>.from(state)
+      ..removeWhere((key, _) => !idSet.contains(key));
+    if (nextState.length != state.length) {
+      value = nextState;
+    }
+  }
+
+  void clear() {
+    if (state.isEmpty) {
+      return;
+    }
+    value = {};
+  }
+}
+
+@Riverpod(keepAlive: true)
 class SystemUiOverlayStyleState extends _$SystemUiOverlayStyleState
     with AutoDisposeNotifierMixin {
   @override

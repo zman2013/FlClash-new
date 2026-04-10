@@ -310,7 +310,7 @@ final class TrayTitleStateProvider
   }
 }
 
-String _$trayTitleStateHash() => r'5f868aaf70480b00bfdc2de18684ee646a93fd12';
+String _$trayTitleStateHash() => r'cbd14c0e293f760b38b41c6bdefda8135df4cd73';
 
 @ProviderFor(vpnState)
 const vpnStateProvider = VpnStateProvider._();
@@ -2497,7 +2497,7 @@ final class SetupStateProvider
   }
 }
 
-String _$setupStateHash() => r'8e0c849fa1a51ee15f8b40be94e3094182325b58';
+String _$setupStateHash() => r'41d2f6e5821c47ef98ba3769c01bdaa3f43be731';
 
 final class SetupStateFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<SetupState>, int?> {

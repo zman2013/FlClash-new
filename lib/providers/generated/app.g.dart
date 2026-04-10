@@ -1223,6 +1223,70 @@ abstract class _$DelayDataSource extends $Notifier<DelayMap> {
   }
 }
 
+@ProviderFor(DomainStatuses)
+const domainStatusesProvider = DomainStatusesProvider._();
+
+final class DomainStatusesProvider
+    extends $NotifierProvider<DomainStatuses, Map<int, DomainRuntimeStatus>> {
+  const DomainStatusesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'domainStatusesProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$domainStatusesHash();
+
+  @$internal
+  @override
+  DomainStatuses create() => DomainStatuses();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Map<int, DomainRuntimeStatus> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Map<int, DomainRuntimeStatus>>(
+        value,
+      ),
+    );
+  }
+}
+
+String _$domainStatusesHash() => r'5381518a3e3a5f1acfbde1bcae8d672e3576dc56';
+
+abstract class _$DomainStatuses
+    extends $Notifier<Map<int, DomainRuntimeStatus>> {
+  Map<int, DomainRuntimeStatus> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref =
+        this.ref
+            as $Ref<
+              Map<int, DomainRuntimeStatus>,
+              Map<int, DomainRuntimeStatus>
+            >;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                Map<int, DomainRuntimeStatus>,
+                Map<int, DomainRuntimeStatus>
+              >,
+              Map<int, DomainRuntimeStatus>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
 @ProviderFor(SystemUiOverlayStyleState)
 const systemUiOverlayStyleStateProvider = SystemUiOverlayStyleStateProvider._();
 

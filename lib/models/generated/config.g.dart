@@ -246,6 +246,82 @@ const _$ProxyCardTypeEnumMap = {
   ProxyCardType.min: 'min',
 };
 
+_DomainRoutingItem _$DomainRoutingItemFromJson(Map<String, dynamic> json) =>
+    _DomainRoutingItem(
+      id: (json['id'] as num).toInt(),
+      ruleAction: $enumDecode(_$RuleActionEnumMap, json['ruleAction']),
+      content: json['content'] as String,
+      target: json['target'] as String,
+      autoSelectLowestDelay: json['autoSelectLowestDelay'] as bool? ?? false,
+    );
+
+Map<String, dynamic> _$DomainRoutingItemToJson(_DomainRoutingItem instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'ruleAction': _$RuleActionEnumMap[instance.ruleAction]!,
+      'content': instance.content,
+      'target': instance.target,
+      'autoSelectLowestDelay': instance.autoSelectLowestDelay,
+    };
+
+const _$RuleActionEnumMap = {
+  RuleAction.DOMAIN: 'DOMAIN',
+  RuleAction.DOMAIN_SUFFIX: 'DOMAIN_SUFFIX',
+  RuleAction.DOMAIN_KEYWORD: 'DOMAIN_KEYWORD',
+  RuleAction.DOMAIN_REGEX: 'DOMAIN_REGEX',
+  RuleAction.GEOSITE: 'GEOSITE',
+  RuleAction.IP_CIDR: 'IP_CIDR',
+  RuleAction.IP_CIDR6: 'IP_CIDR6',
+  RuleAction.IP_SUFFIX: 'IP_SUFFIX',
+  RuleAction.IP_ASN: 'IP_ASN',
+  RuleAction.GEOIP: 'GEOIP',
+  RuleAction.SRC_GEOIP: 'SRC_GEOIP',
+  RuleAction.SRC_IP_ASN: 'SRC_IP_ASN',
+  RuleAction.SRC_IP_CIDR: 'SRC_IP_CIDR',
+  RuleAction.SRC_IP_SUFFIX: 'SRC_IP_SUFFIX',
+  RuleAction.DST_PORT: 'DST_PORT',
+  RuleAction.SRC_PORT: 'SRC_PORT',
+  RuleAction.IN_PORT: 'IN_PORT',
+  RuleAction.IN_TYPE: 'IN_TYPE',
+  RuleAction.IN_USER: 'IN_USER',
+  RuleAction.IN_NAME: 'IN_NAME',
+  RuleAction.PROCESS_PATH: 'PROCESS_PATH',
+  RuleAction.PROCESS_PATH_REGEX: 'PROCESS_PATH_REGEX',
+  RuleAction.PROCESS_NAME: 'PROCESS_NAME',
+  RuleAction.PROCESS_NAME_REGEX: 'PROCESS_NAME_REGEX',
+  RuleAction.UID: 'UID',
+  RuleAction.NETWORK: 'NETWORK',
+  RuleAction.DSCP: 'DSCP',
+  RuleAction.RULE_SET: 'RULE_SET',
+  RuleAction.AND: 'AND',
+  RuleAction.OR: 'OR',
+  RuleAction.NOT: 'NOT',
+  RuleAction.SUB_RULE: 'SUB_RULE',
+  RuleAction.MATCH: 'MATCH',
+};
+
+_DomainRoutingProps _$DomainRoutingPropsFromJson(Map<String, dynamic> json) =>
+    _DomainRoutingProps(
+      items:
+          (json['items'] as List<dynamic>?)
+              ?.map(
+                (e) => DomainRoutingItem.fromJson(e as Map<String, dynamic>),
+              )
+              .toList() ??
+          const [],
+      refreshIntervalSeconds:
+          (json['refreshIntervalSeconds'] as num?)?.toInt() ?? 60,
+      minSwitchIntervalSeconds:
+          (json['minSwitchIntervalSeconds'] as num?)?.toInt() ?? 300,
+    );
+
+Map<String, dynamic> _$DomainRoutingPropsToJson(_DomainRoutingProps instance) =>
+    <String, dynamic>{
+      'items': instance.items,
+      'refreshIntervalSeconds': instance.refreshIntervalSeconds,
+      'minSwitchIntervalSeconds': instance.minSwitchIntervalSeconds,
+    };
+
 _TextScale _$TextScaleFromJson(Map<String, dynamic> json) => _TextScale(
   enable: json['enable'] as bool? ?? false,
   scale: (json['scale'] as num?)?.toDouble() ?? 1.0,
@@ -337,6 +413,11 @@ _Config _$ConfigFromJson(Map<String, dynamic> json) => _Config(
   windowProps: json['windowProps'] == null
       ? defaultWindowProps
       : WindowProps.fromJson(json['windowProps'] as Map<String, dynamic>?),
+  domainRoutingProps: json['domainRoutingProps'] == null
+      ? defaultDomainRoutingProps
+      : DomainRoutingProps.fromJson(
+          json['domainRoutingProps'] as Map<String, dynamic>?,
+        ),
   patchClashConfig: json['patchClashConfig'] == null
       ? defaultClashConfig
       : ClashConfig.fromJson(json['patchClashConfig'] as Map<String, dynamic>),
@@ -353,5 +434,6 @@ Map<String, dynamic> _$ConfigToJson(_Config instance) => <String, dynamic>{
   'themeProps': instance.themeProps,
   'proxiesStyleProps': instance.proxiesStyleProps,
   'windowProps': instance.windowProps,
+  'domainRoutingProps': instance.domainRoutingProps,
   'patchClashConfig': instance.patchClashConfig,
 };

@@ -8175,6 +8175,278 @@ as String?,
 }
 
 /// @nodoc
+mixin _$DomainRuntimeStatus {
+
+ String get currentProxyName; int? get delay; String? get probeUrl; String? get message; DateTime? get updatedAt; int get failureCount;
+/// Create a copy of DomainRuntimeStatus
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$DomainRuntimeStatusCopyWith<DomainRuntimeStatus> get copyWith => _$DomainRuntimeStatusCopyWithImpl<DomainRuntimeStatus>(this as DomainRuntimeStatus, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DomainRuntimeStatus&&(identical(other.currentProxyName, currentProxyName) || other.currentProxyName == currentProxyName)&&(identical(other.delay, delay) || other.delay == delay)&&(identical(other.probeUrl, probeUrl) || other.probeUrl == probeUrl)&&(identical(other.message, message) || other.message == message)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.failureCount, failureCount) || other.failureCount == failureCount));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,currentProxyName,delay,probeUrl,message,updatedAt,failureCount);
+
+@override
+String toString() {
+  return 'DomainRuntimeStatus(currentProxyName: $currentProxyName, delay: $delay, probeUrl: $probeUrl, message: $message, updatedAt: $updatedAt, failureCount: $failureCount)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $DomainRuntimeStatusCopyWith<$Res>  {
+  factory $DomainRuntimeStatusCopyWith(DomainRuntimeStatus value, $Res Function(DomainRuntimeStatus) _then) = _$DomainRuntimeStatusCopyWithImpl;
+@useResult
+$Res call({
+ String currentProxyName, int? delay, String? probeUrl, String? message, DateTime? updatedAt, int failureCount
+});
+
+
+
+
+}
+/// @nodoc
+class _$DomainRuntimeStatusCopyWithImpl<$Res>
+    implements $DomainRuntimeStatusCopyWith<$Res> {
+  _$DomainRuntimeStatusCopyWithImpl(this._self, this._then);
+
+  final DomainRuntimeStatus _self;
+  final $Res Function(DomainRuntimeStatus) _then;
+
+/// Create a copy of DomainRuntimeStatus
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? currentProxyName = null,Object? delay = freezed,Object? probeUrl = freezed,Object? message = freezed,Object? updatedAt = freezed,Object? failureCount = null,}) {
+  return _then(_self.copyWith(
+currentProxyName: null == currentProxyName ? _self.currentProxyName : currentProxyName // ignore: cast_nullable_to_non_nullable
+as String,delay: freezed == delay ? _self.delay : delay // ignore: cast_nullable_to_non_nullable
+as int?,probeUrl: freezed == probeUrl ? _self.probeUrl : probeUrl // ignore: cast_nullable_to_non_nullable
+as String?,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,failureCount: null == failureCount ? _self.failureCount : failureCount // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [DomainRuntimeStatus].
+extension DomainRuntimeStatusPatterns on DomainRuntimeStatus {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _DomainRuntimeStatus value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _DomainRuntimeStatus() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _DomainRuntimeStatus value)  $default,){
+final _that = this;
+switch (_that) {
+case _DomainRuntimeStatus():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _DomainRuntimeStatus value)?  $default,){
+final _that = this;
+switch (_that) {
+case _DomainRuntimeStatus() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String currentProxyName,  int? delay,  String? probeUrl,  String? message,  DateTime? updatedAt,  int failureCount)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _DomainRuntimeStatus() when $default != null:
+return $default(_that.currentProxyName,_that.delay,_that.probeUrl,_that.message,_that.updatedAt,_that.failureCount);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String currentProxyName,  int? delay,  String? probeUrl,  String? message,  DateTime? updatedAt,  int failureCount)  $default,) {final _that = this;
+switch (_that) {
+case _DomainRuntimeStatus():
+return $default(_that.currentProxyName,_that.delay,_that.probeUrl,_that.message,_that.updatedAt,_that.failureCount);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String currentProxyName,  int? delay,  String? probeUrl,  String? message,  DateTime? updatedAt,  int failureCount)?  $default,) {final _that = this;
+switch (_that) {
+case _DomainRuntimeStatus() when $default != null:
+return $default(_that.currentProxyName,_that.delay,_that.probeUrl,_that.message,_that.updatedAt,_that.failureCount);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+
+class _DomainRuntimeStatus implements DomainRuntimeStatus {
+  const _DomainRuntimeStatus({this.currentProxyName = '', this.delay, this.probeUrl, this.message, this.updatedAt, this.failureCount = 0});
+  
+
+@override@JsonKey() final  String currentProxyName;
+@override final  int? delay;
+@override final  String? probeUrl;
+@override final  String? message;
+@override final  DateTime? updatedAt;
+@override@JsonKey() final  int failureCount;
+
+/// Create a copy of DomainRuntimeStatus
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$DomainRuntimeStatusCopyWith<_DomainRuntimeStatus> get copyWith => __$DomainRuntimeStatusCopyWithImpl<_DomainRuntimeStatus>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DomainRuntimeStatus&&(identical(other.currentProxyName, currentProxyName) || other.currentProxyName == currentProxyName)&&(identical(other.delay, delay) || other.delay == delay)&&(identical(other.probeUrl, probeUrl) || other.probeUrl == probeUrl)&&(identical(other.message, message) || other.message == message)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.failureCount, failureCount) || other.failureCount == failureCount));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,currentProxyName,delay,probeUrl,message,updatedAt,failureCount);
+
+@override
+String toString() {
+  return 'DomainRuntimeStatus(currentProxyName: $currentProxyName, delay: $delay, probeUrl: $probeUrl, message: $message, updatedAt: $updatedAt, failureCount: $failureCount)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$DomainRuntimeStatusCopyWith<$Res> implements $DomainRuntimeStatusCopyWith<$Res> {
+  factory _$DomainRuntimeStatusCopyWith(_DomainRuntimeStatus value, $Res Function(_DomainRuntimeStatus) _then) = __$DomainRuntimeStatusCopyWithImpl;
+@override @useResult
+$Res call({
+ String currentProxyName, int? delay, String? probeUrl, String? message, DateTime? updatedAt, int failureCount
+});
+
+
+
+
+}
+/// @nodoc
+class __$DomainRuntimeStatusCopyWithImpl<$Res>
+    implements _$DomainRuntimeStatusCopyWith<$Res> {
+  __$DomainRuntimeStatusCopyWithImpl(this._self, this._then);
+
+  final _DomainRuntimeStatus _self;
+  final $Res Function(_DomainRuntimeStatus) _then;
+
+/// Create a copy of DomainRuntimeStatus
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? currentProxyName = null,Object? delay = freezed,Object? probeUrl = freezed,Object? message = freezed,Object? updatedAt = freezed,Object? failureCount = null,}) {
+  return _then(_DomainRuntimeStatus(
+currentProxyName: null == currentProxyName ? _self.currentProxyName : currentProxyName // ignore: cast_nullable_to_non_nullable
+as String,delay: freezed == delay ? _self.delay : delay // ignore: cast_nullable_to_non_nullable
+as int?,probeUrl: freezed == probeUrl ? _self.probeUrl : probeUrl // ignore: cast_nullable_to_non_nullable
+as String?,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,failureCount: null == failureCount ? _self.failureCount : failureCount // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
+/// @nodoc
 mixin _$VpnState {
 
  TunStack get stack; VpnProps get vpnProps;

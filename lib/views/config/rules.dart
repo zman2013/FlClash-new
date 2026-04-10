@@ -38,7 +38,12 @@ class _AddedRulesViewState extends ConsumerState<AddedRulesView> {
 
   void _handleSelectAll() {
     final ids =
-        ref.read(globalRulesProvider).value?.map((item) => item.id).toSet() ??
+        ref
+            .read(globalRulesProvider)
+            .value
+            ?.where((item) => !isDomainProxyRule(item))
+            .map((item) => item.id)
+            .toSet() ??
         {};
     ref.read(selectedItemsProvider(_key).notifier).update((selected) {
       return selected.containsAll(ids) ? {} : ids;
@@ -62,7 +67,9 @@ class _AddedRulesViewState extends ConsumerState<AddedRulesView> {
 
   @override
   Widget build(BuildContext context) {
-    final rules = ref.watch(globalRulesProvider).value ?? [];
+    final rules = (ref.watch(globalRulesProvider).value ?? [])
+        .where((rule) => !isDomainProxyRule(rule))
+        .toList();
     final selectedRules = ref.watch(selectedItemsProvider(_key));
     return CommonPopScope(
       onPop: (_) {
