@@ -34,6 +34,14 @@ class Navigation {
             const ProfilesView(key: GlobalObjectKey(PageLabel.profiles)),
       ),
       NavigationItem(
+        icon: const Icon(Icons.language),
+        label: PageLabel.domain,
+        builder: (_) => const DomainRulesView(
+          key: GlobalObjectKey(PageLabel.domain),
+        ),
+        modes: [NavigationItemMode.desktop, NavigationItemMode.more],
+      ),
+      NavigationItem(
         icon: Icon(Icons.view_timeline),
         label: PageLabel.requests,
         builder: (_) =>
