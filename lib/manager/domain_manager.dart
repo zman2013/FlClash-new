@@ -208,7 +208,11 @@ class _DomainManagerState extends ConsumerState<DomainManager> {
     required int minSwitchIntervalSeconds,
   }) async {
     final previousStatus = ref.read(domainStatusesProvider)[item.id];
-    final target = item.target.trim();
+    final domainGroupName = buildDomainProxyGroupName(item.id);
+    final target =
+        item.autoSelectLowestDelay && groups.getGroup(domainGroupName) != null
+        ? domainGroupName
+        : item.target.trim();
     final probeUrl = item.probeUrl;
     final targetGroup = groups.getGroup(target);
     final resolvedState = computeRealSelectedProxyState(
@@ -387,7 +391,11 @@ class _DomainManagerState extends ConsumerState<DomainManager> {
     required String proxyName,
   }) async {
     appController.updateCurrentSelectedMap(groupName, proxyName);
-    await appController.changeProxy(groupName: groupName, proxyName: proxyName);
+    await appController.changeProxy(
+      groupName: groupName,
+      proxyName: proxyName,
+      resetConnections: false,
+    );
     appController.updateGroupsDebounce();
   }
 

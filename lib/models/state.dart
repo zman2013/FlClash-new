@@ -358,6 +358,7 @@ abstract class MakeRealProfileState with _$MakeRealProfileState {
     required ClashConfig realPatchConfig,
     required bool overrideDns,
     required bool appendSystemDns,
+    required List<DomainRoutingItem> domainItems,
     required List<Rule> addedRules,
     required String defaultUA,
   }) = _MakeRealProfileState;
@@ -380,6 +381,7 @@ abstract class SetupState with _$SetupState {
     required int? profileId,
     required int? profileLastUpdateDate,
     required OverwriteType overwriteType,
+    required List<DomainRoutingItem> domainItems,
     required List<Rule> addedRules,
     required Script? script,
     required bool overrideDns,
@@ -400,7 +402,11 @@ extension SetupStateExt on SetupState {
     }
     final scriptIsChange = script != lastSetupState.script;
     if (overwriteType != lastSetupState.overwriteType) {
-      if (!ruleListEquality.equals(addedRules, lastSetupState.addedRules) ||
+      if (!const DeepCollectionEquality().equals(
+            domainItems,
+            lastSetupState.domainItems,
+          ) ||
+          !ruleListEquality.equals(addedRules, lastSetupState.addedRules) ||
           scriptIsChange) {
         return true;
       }
@@ -411,7 +417,11 @@ extension SetupStateExt on SetupState {
         }
       }
       if (overwriteType == OverwriteType.standard) {
-        if (!ruleListEquality.equals(addedRules, lastSetupState.addedRules)) {
+        if (!const DeepCollectionEquality().equals(
+              domainItems,
+              lastSetupState.domainItems,
+            ) ||
+            !ruleListEquality.equals(addedRules, lastSetupState.addedRules)) {
           return true;
         }
       }

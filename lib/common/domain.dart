@@ -22,6 +22,10 @@ List<Rule> filterDomainProxyRules(Iterable<Rule> rules) {
   return rules.where(isDomainProxyRule).toList();
 }
 
+String buildDomainProxyGroupName(int id) {
+  return 'FLCLASH-DOMAIN-$id';
+}
+
 String normalizeDomainHost(String value) {
   final host = value.trim().replaceFirst(RegExp(r'^\*\.'), '');
   return host.startsWith('.') ? host.substring(1) : host;
