@@ -91,6 +91,7 @@ Future<Map<String, dynamic>> _makeRealProfileTask(
   final profileId = data.profileId;
   final overrideDns = data.overrideDns;
   final addedRules = data.addedRules;
+  final domainItems = data.domainItems;
   final appendSystemDns = data.appendSystemDns;
   final defaultUA = data.defaultUA;
   String getProvidersFilePathInner(String type, String url) {
@@ -176,6 +177,39 @@ Future<Map<String, dynamic>> _makeRealProfileTask(
   rawConfig['profile']['store-selected'] = false;
   rawConfig['geox-url'] = realPatchConfig.geoXUrl.toJson();
   rawConfig['global-ua'] = realPatchConfig.globalUa ?? defaultUA;
+  final proxyGroups = List<Map<String, dynamic>>.from(
+    ((rawConfig['proxy-groups'] as List?) ?? []).map(
+      (item) => Map<String, dynamic>.from(item),
+    ),
+  );
+  final proxyGroupNames = proxyGroups
+      .map((group) => group['name']?.toString() ?? '')
+      .where((name) => name.isNotEmpty)
+      .toSet();
+  final proxyGroupMap = <String, Map<String, dynamic>>{
+    for (final group in proxyGroups)
+      if ((group['name']?.toString() ?? '').isNotEmpty)
+        group['name'].toString(): group,
+  };
+  for (final item in domainItems) {
+    if (!item.autoSelectLowestDelay) {
+      continue;
+    }
+    final sourceGroup = proxyGroupMap[item.target];
+    if (sourceGroup == null) {
+      continue;
+    }
+    final domainGroupName = buildDomainProxyGroupName(item.id);
+    if (proxyGroupNames.contains(domainGroupName)) {
+      continue;
+    }
+    final clonedGroup = Map<String, dynamic>.from(sourceGroup)
+      ..['name'] = domainGroupName
+      ..['hidden'] = true;
+    proxyGroups.add(clonedGroup);
+    proxyGroupNames.add(domainGroupName);
+  }
+  rawConfig['proxy-groups'] = proxyGroups;
   if (rawConfig['hosts'] == null) {
     rawConfig['hosts'] = {};
   }
@@ -214,6 +248,14 @@ Future<Map<String, dynamic>> _makeRealProfileTask(
     rules = List<String>.from(rawConfig['rules']);
   }
   rawConfig.remove('rules');
+  final domainRules = domainItems.map((item) {
+    final generatedGroupName = buildDomainProxyGroupName(item.id);
+    final target =
+        item.autoSelectLowestDelay && proxyGroupNames.contains(generatedGroupName)
+        ? generatedGroupName
+        : item.target;
+    return item.parsedRule.copyWith(ruleTarget: target).value;
+  }).toList();
   if (addedRules.isNotEmpty) {
     final parsedNewRules = addedRules
         .map((item) => ParsedRule.parseString(item.value))
@@ -252,7 +294,9 @@ Future<Map<String, dynamic>> _makeRealProfileTask(
     } else {
       finalAddedRules = addedRules.map((e) => e.value).toList();
     }
-    rules = [...finalAddedRules, ...rules];
+    rules = [...domainRules, ...finalAddedRules, ...rules];
+  } else if (domainRules.isNotEmpty) {
+    rules = [...domainRules, ...rules];
   }
   rawConfig['rules'] = rules;
   return Map<String, dynamic>.from(rawConfig);

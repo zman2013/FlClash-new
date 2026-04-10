@@ -370,7 +370,10 @@ extension ProfilesControllerExt on AppController {
     while (true) {
       try {
         final profile = await loadingRun(tag: LoadingTag.profiles, () async {
-          return await Profile.normal(url: url, loginPassword: loginPassword.isEmpty ? null : loginPassword).update();
+          return await Profile.normal(
+            url: url,
+            loginPassword: loginPassword.isEmpty ? null : loginPassword,
+          ).update();
         }, title: appLocalizations.addProfile);
         if (profile != null) {
           putProfile(profile);
@@ -546,14 +549,17 @@ extension ProxiesControllerExt on AppController {
   Future<void> changeProxy({
     required String groupName,
     required String proxyName,
+    bool resetConnections = true,
   }) async {
     await coreController.changeProxy(
       ChangeProxyParams(groupName: groupName, proxyName: proxyName),
     );
-    if (_ref.read(appSettingProvider).closeConnections) {
-      coreController.closeConnections();
-    } else {
-      coreController.resetConnections();
+    if (resetConnections) {
+      if (_ref.read(appSettingProvider).closeConnections) {
+        coreController.closeConnections();
+      } else {
+        coreController.resetConnections();
+      }
     }
     addCheckIp();
   }
@@ -759,6 +765,7 @@ extension SetupControllerExt on AppController {
         realPatchConfig: realPatchConfig,
         overrideDns: overrideDns,
         appendSystemDns: appendSystemDns,
+        domainItems: setupState.domainItems,
         addedRules: addedRules,
         defaultUA: defaultUA,
       ),
