@@ -249,9 +249,10 @@ Future<Map<String, dynamic>> _makeRealProfileTask(
   }
   rawConfig.remove('rules');
   final domainRules = domainItems.map((item) {
+    final generatedGroupName = buildDomainProxyGroupName(item.id);
     final target =
-        item.autoSelectLowestDelay && proxyGroupNames.contains(item.target)
-        ? buildDomainProxyGroupName(item.id)
+        item.autoSelectLowestDelay && proxyGroupNames.contains(generatedGroupName)
+        ? generatedGroupName
         : item.target;
     return item.parsedRule.copyWith(ruleTarget: target).value;
   }).toList();
