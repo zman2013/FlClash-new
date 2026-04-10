@@ -687,24 +687,22 @@ Future<SetupState> setupState(Ref ref, int? profileId) async {
   final profileLastUpdateDate = profile?.lastUpdateDate?.millisecondsSinceEpoch;
   final overwriteType = profile?.overwriteType ?? OverwriteType.standard;
   final dns = ref.watch(patchClashConfigProvider.select((state) => state.dns));
-  final domainRules = ref.watch(
-    domainSettingProvider.select(
-      (state) => state.items.map((item) => item.rule).toList(),
-    ),
+  final domainItems = ref.watch(
+    domainSettingProvider.select((state) => state.items),
   );
   final script = await ref.watch(scriptProvider(scriptId).future);
   final overrideDns = ref.watch(overrideDnsProvider);
   final List<Rule> databaseRules = profileId != null
       ? await ref.watch(addedRuleStreamProvider(profileId).future)
       : [];
-  final addedRules = [
-    ...domainRules,
-    ...databaseRules.where((rule) => !isDomainProxyRule(rule)),
-  ];
+  final addedRules = databaseRules
+      .where((rule) => !isDomainProxyRule(rule))
+      .toList();
   return SetupState(
     profileId: profileId,
     profileLastUpdateDate: profileLastUpdateDate,
     overwriteType: overwriteType,
+    domainItems: domainItems,
     addedRules: addedRules,
     script: script,
     overrideDns: overrideDns,

@@ -40,6 +40,27 @@ String _domainAutoSelectHintText() {
   );
 }
 
+String _domainSourceProxyGroupText() {
+  return Intl.message(
+    'Candidate proxy group',
+    name: 'domainSourceProxyGroupText',
+  );
+}
+
+String _domainSourceProxyGroupHintText() {
+  return Intl.message(
+    'This domain will switch independently inside the selected proxy group',
+    name: 'domainSourceProxyGroupHintText',
+  );
+}
+
+String _domainProxyGroupRequiredText() {
+  return Intl.message(
+    'Please select a proxy group',
+    name: 'domainProxyGroupRequiredText',
+  );
+}
+
 String _domainLatencyText() {
   return Intl.message('Latency', name: 'domainLatencyText');
 }
@@ -427,6 +448,7 @@ class _AddOrEditDomainRuleDialogState
   RuleAction _ruleAction = domainRuleActions.first;
   bool _autoSelectLowestDelay = false;
   List<String> _targetSuggestions = [];
+  List<String> _groupSuggestions = [];
 
   @override
   void initState() {
@@ -448,6 +470,7 @@ class _AddOrEditDomainRuleDialogState
 
   Future<void> _loadTargetSuggestions() async {
     final targets = <String>[];
+    final groups = <String>[];
 
     void addTarget(String? value) {
       final text = value?.trim();
@@ -459,15 +482,53 @@ class _AddOrEditDomainRuleDialogState
 
     addTarget(_targetController.text);
     for (final group in ref.read(groupsProvider)) {
+      final groupName = group.name.trim();
+      if (groupName.isEmpty || groups.contains(groupName)) {
+        continue;
+      }
+      groups.add(groupName);
       addTarget(group.name);
     }
     addTarget(RuleTarget.DIRECT.name);
     addTarget(RuleTarget.REJECT.name);
     setState(() {
+      _groupSuggestions = groups;
       _targetSuggestions = targets;
-      if (_targetController.text.isEmpty && targets.isNotEmpty) {
-        _targetController.text = targets.first;
+      if (_targetController.text.isEmpty) {
+        final suggestions = _currentTargetSuggestions;
+        if (suggestions.isNotEmpty) {
+          _targetController.text = suggestions.first;
+        }
       }
+    });
+  }
+
+  List<String> get _currentTargetSuggestions {
+    return _autoSelectLowestDelay ? _groupSuggestions : _targetSuggestions;
+  }
+
+  bool get _targetIsProxyGroup {
+    final target = _targetController.text.trim();
+    return target.isNotEmpty && _groupSuggestions.contains(target);
+  }
+
+  void _syncTargetWithMode() {
+    final suggestions = _currentTargetSuggestions;
+    final target = _targetController.text.trim();
+    if (target.isNotEmpty && suggestions.contains(target)) {
+      return;
+    }
+    if (suggestions.isEmpty) {
+      _targetController.clear();
+      return;
+    }
+    _targetController.text = suggestions.first;
+  }
+
+  void _handleAutoSelectChanged(bool value) {
+    setState(() {
+      _autoSelectLowestDelay = value;
+      _syncTargetWithMode();
     });
   }
 
@@ -551,14 +612,20 @@ class _AddOrEditDomainRuleDialogState
             ),
             const SizedBox(height: 20),
             DropdownButtonFormField<String>(
-              initialValue: _targetSuggestions.contains(_targetController.text)
+              initialValue:
+                  _currentTargetSuggestions.contains(_targetController.text)
                   ? _targetController.text
                   : null,
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
-                labelText: appLocalizations.ruleTarget,
+                labelText: _autoSelectLowestDelay
+                    ? _domainSourceProxyGroupText()
+                    : appLocalizations.ruleTarget,
+                helperText: _autoSelectLowestDelay
+                    ? _domainSourceProxyGroupHintText()
+                    : null,
               ),
-              items: _targetSuggestions
+              items: _currentTargetSuggestions
                   .map(
                     (target) =>
                         DropdownMenuItem(value: target, child: Text(target)),
@@ -572,7 +639,13 @@ class _AddOrEditDomainRuleDialogState
               },
               validator: (_) {
                 if (_targetController.text.trim().isEmpty) {
-                  return appLocalizations.emptyTip(appLocalizations.ruleTarget);
+                  final label = _autoSelectLowestDelay
+                      ? _domainSourceProxyGroupText()
+                      : appLocalizations.ruleTarget;
+                  return appLocalizations.emptyTip(label);
+                }
+                if (_autoSelectLowestDelay && !_targetIsProxyGroup) {
+                  return _domainProxyGroupRequiredText();
                 }
                 return null;
               },
@@ -583,17 +656,11 @@ class _AddOrEditDomainRuleDialogState
               padding: EdgeInsets.zero,
               radius: 18,
               onPressed: () {
-                setState(() {
-                  _autoSelectLowestDelay = !_autoSelectLowestDelay;
-                });
+                _handleAutoSelectChanged(!_autoSelectLowestDelay);
               },
               child: SwitchListTile.adaptive(
                 value: _autoSelectLowestDelay,
-                onChanged: (value) {
-                  setState(() {
-                    _autoSelectLowestDelay = value;
-                  });
-                },
+                onChanged: _handleAutoSelectChanged,
                 title: Text(_domainAutoSelectLowestDelayText()),
                 subtitle: Text(_domainAutoSelectHintText()),
               ),
