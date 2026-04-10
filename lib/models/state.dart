@@ -298,6 +298,18 @@ abstract class SelectedProxyState with _$SelectedProxyState {
 }
 
 @freezed
+abstract class DomainRuntimeStatus with _$DomainRuntimeStatus {
+  const factory DomainRuntimeStatus({
+    @Default('') String currentProxyName,
+    int? delay,
+    String? probeUrl,
+    String? message,
+    DateTime? updatedAt,
+    @Default(0) int failureCount,
+  }) = _DomainRuntimeStatus;
+}
+
+@freezed
 abstract class VpnState with _$VpnState {
   const factory VpnState({
     required TunStack stack,

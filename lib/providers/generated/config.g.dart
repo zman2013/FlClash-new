@@ -538,6 +538,59 @@ abstract class _$ProxiesStyleSetting extends $Notifier<ProxiesStyleProps> {
   }
 }
 
+@ProviderFor(DomainSetting)
+const domainSettingProvider = DomainSettingProvider._();
+
+final class DomainSettingProvider
+    extends $NotifierProvider<DomainSetting, DomainRoutingProps> {
+  const DomainSettingProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'domainSettingProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$domainSettingHash();
+
+  @$internal
+  @override
+  DomainSetting create() => DomainSetting();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(DomainRoutingProps value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<DomainRoutingProps>(value),
+    );
+  }
+}
+
+String _$domainSettingHash() => r'a7efe284b3b07a69df9dc741c697bdddb2471974';
+
+abstract class _$DomainSetting extends $Notifier<DomainRoutingProps> {
+  DomainRoutingProps build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<DomainRoutingProps, DomainRoutingProps>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<DomainRoutingProps, DomainRoutingProps>,
+              DomainRoutingProps,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
 @ProviderFor(PatchClashConfig)
 const patchClashConfigProvider = PatchClashConfigProvider._();
 
@@ -629,4 +682,4 @@ final class _ConfigProvider extends $FunctionalProvider<Config, Config, Config>
   }
 }
 
-String _$_configHash() => r'17dad8563f5727690a7fd484815e7344e6a46ffa';
+String _$_configHash() => r'2a7ecde31f73b95a58af7fb80dac39c8841f6a26';

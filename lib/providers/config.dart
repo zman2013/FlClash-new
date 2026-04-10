@@ -89,6 +89,14 @@ class ProxiesStyleSetting extends _$ProxiesStyleSetting
 }
 
 @riverpod
+class DomainSetting extends _$DomainSetting with AutoDisposeNotifierMixin {
+  @override
+  DomainRoutingProps build() {
+    return DomainRoutingProps();
+  }
+}
+
+@riverpod
 class PatchClashConfig extends _$PatchClashConfig
     with AutoDisposeNotifierMixin {
   @override
@@ -109,6 +117,7 @@ Config _config(Ref ref) {
   final overrideDns = ref.watch(overrideDnsProvider);
   final hotKeyActions = ref.watch(hotKeyActionsProvider);
   final proxiesStyleProps = ref.watch(proxiesStyleSettingProvider);
+  final domainRoutingProps = ref.watch(domainSettingProvider);
   final patchClashConfig = ref.watch(patchClashConfigProvider);
   return Config(
     appSettingProps: appSettingProps,
@@ -121,6 +130,7 @@ Config _config(Ref ref) {
     overrideDns: overrideDns,
     hotKeyActions: hotKeyActions,
     proxiesStyleProps: proxiesStyleProps,
+    domainRoutingProps: domainRoutingProps,
     patchClashConfig: patchClashConfig,
   );
 }
@@ -140,6 +150,9 @@ List<Override> buildConfigOverrides(Config config) {
     hotKeyActionsProvider.overrideWithBuild((_, _) => config.hotKeyActions),
     proxiesStyleSettingProvider.overrideWithBuild(
       (_, _) => config.proxiesStyleProps,
+    ),
+    domainSettingProvider.overrideWithBuild(
+      (_, _) => config.domainRoutingProps,
     ),
     patchClashConfigProvider.overrideWithBuild(
       (_, _) => config.patchClashConfig,

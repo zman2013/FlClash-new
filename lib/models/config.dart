@@ -34,6 +34,7 @@ const defaultNetworkProps = NetworkProps();
 const defaultProxiesStyleProps = ProxiesStyleProps();
 const defaultWindowProps = WindowProps();
 const defaultAccessControlProps = AccessControlProps();
+const defaultDomainRoutingProps = DomainRoutingProps();
 final defaultThemeProps = ThemeProps(primaryColor: defaultPrimaryColor);
 
 const List<DashboardWidget> defaultDashboardWidgets = [
@@ -188,6 +189,67 @@ abstract class ProxiesStyleProps with _$ProxiesStyleProps {
 }
 
 @freezed
+abstract class DomainRoutingItem with _$DomainRoutingItem {
+  const factory DomainRoutingItem({
+    required int id,
+    required RuleAction ruleAction,
+    required String content,
+    required String target,
+    @Default(false) bool autoSelectLowestDelay,
+  }) = _DomainRoutingItem;
+
+  factory DomainRoutingItem.fromJson(Map<String, Object?> json) =>
+      _$DomainRoutingItemFromJson(json);
+}
+
+extension DomainRoutingItemExt on DomainRoutingItem {
+  ParsedRule get parsedRule {
+    return ParsedRule(
+      ruleAction: ruleAction,
+      content: content.trim(),
+      ruleTarget: target.trim(),
+    );
+  }
+
+  Rule get rule => Rule(id: id, value: parsedRule.value);
+
+  String get key {
+    return '${ruleAction.value}|${content.trim()}|${target.trim()}';
+  }
+
+  String? get probeUrl {
+    return buildDomainProbeUrl(ruleAction: ruleAction, content: content);
+  }
+}
+
+extension DomainRoutingItemsExt on List<DomainRoutingItem> {
+  List<DomainRoutingItem> copyAndPut(DomainRoutingItem item) {
+    final nextItems = List<DomainRoutingItem>.from(this);
+    final index = nextItems.indexWhere((element) => element.id == item.id);
+    if (index == -1) {
+      nextItems.insert(0, item);
+    } else {
+      nextItems[index] = item;
+    }
+    return nextItems;
+  }
+}
+
+@freezed
+abstract class DomainRoutingProps with _$DomainRoutingProps {
+  const factory DomainRoutingProps({
+    @Default([]) List<DomainRoutingItem> items,
+    @Default(60) int refreshIntervalSeconds,
+    @Default(300) int minSwitchIntervalSeconds,
+  }) = _DomainRoutingProps;
+
+  factory DomainRoutingProps.fromJson(Map<String, Object?>? json) =>
+      json == null
+      ? defaultDomainRoutingProps
+      : _$DomainRoutingPropsFromJson(json);
+}
+
+@freezed
 abstract class TextScale with _$TextScale {
   const factory TextScale({
     @Default(false) bool enable,
@@ -239,6 +301,7 @@ abstract class Config with _$Config {
     @JsonKey(fromJson: ThemeProps.safeFromJson) required ThemeProps themeProps,
     @Default(defaultProxiesStyleProps) ProxiesStyleProps proxiesStyleProps,
     @Default(defaultWindowProps) WindowProps windowProps,
+    @Default(defaultDomainRoutingProps) DomainRoutingProps domainRoutingProps,
     @Default(defaultClashConfig) ClashConfig patchClashConfig,
   }) = _Config;
 
