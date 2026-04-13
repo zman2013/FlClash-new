@@ -34,7 +34,22 @@ on Mobile:
 
 ✨ Support subscription link, Dark mode
 
+🌐 Supports domain-based proxy routing, including per-domain proxy selection,
+latency display, and automatic switching to the lowest-latency proxy inside a
+selected proxy group
+
 ## Use
+
+### Domain Routing
+
+FlClash supports first-level domain routing settings. You can configure a
+specific domain to use `DIRECT`, a fixed proxy target, or a proxy group.
+
+When automatic switching is enabled for a domain, FlClash periodically probes
+the domain itself, displays the current latency and proxy information, and can
+switch that domain to the lowest-latency proxy inside the selected proxy group.
+Each auto-switch domain uses an independent hidden proxy group, so different
+domains do not compete for the same runtime selection state.
 
 ### Linux
 

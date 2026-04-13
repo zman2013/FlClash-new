@@ -24,6 +24,7 @@ abstract class UpdateParams with _$UpdateParams {
     @JsonKey(name: 'allow-lan') required bool allowLan,
     @JsonKey(name: 'find-process-mode')
     required FindProcessMode findProcessMode,
+    @JsonKey(name: 'sniffing') required bool sniffing,
     required Mode mode,
     @JsonKey(name: 'log-level') required LogLevel logLevel,
     required bool ipv6,

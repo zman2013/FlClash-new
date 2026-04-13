@@ -364,6 +364,9 @@ _ClashConfig _$ClashConfigFromJson(Map<String, dynamic> json) => _ClashConfig(
   geodataLoader:
       $enumDecodeNullable(_$GeodataLoaderEnumMap, json['geodata-loader']) ??
       GeodataLoader.memconservative,
+  sniffer: json['sniffer'] == null
+      ? defaultSniffer
+      : Sniffer.safeFormJson(json['sniffer'] as Map<String, Object?>?),
   proxyGroups:
       (json['proxy-groups'] as List<dynamic>?)
           ?.map((e) => ProxyGroup.fromJson(e as Map<String, dynamic>))
@@ -405,6 +408,7 @@ Map<String, dynamic> _$ClashConfigToJson(_ClashConfig instance) =>
       'dns': instance.dns,
       'geox-url': instance.geoXUrl,
       'geodata-loader': _$GeodataLoaderEnumMap[instance.geodataLoader]!,
+      'sniffer': instance.sniffer,
       'proxy-groups': instance.proxyGroups,
       'rule': instance.rule,
       'global-ua': instance.globalUa,

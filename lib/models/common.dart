@@ -101,6 +101,8 @@ abstract class TrackerInfo with _$TrackerInfo {
     required List<String> chains,
     required String rule,
     required String rulePayload,
+    @Default(true) bool success,
+    @Default('') String error,
     int? downloadSpeed,
     int? uploadSpeed,
   }) = _TrackerInfo;
@@ -110,6 +112,10 @@ abstract class TrackerInfo with _$TrackerInfo {
 }
 
 extension TrackerInfoExt on TrackerInfo {
+  bool get isFailed => !success;
+
+  String get statusLabel => success ? 'OK' : 'Failed';
+
   String get desc {
     var text = '${metadata.network}://';
     final ips = [
@@ -194,22 +200,33 @@ abstract class TrackerInfosState with _$TrackerInfosState {
 extension TrackerInfosStateExt on TrackerInfosState {
   List<TrackerInfo> get list {
     final lowerQuery = query.toLowerCase().trim();
-    final lowQuery = query.toLowerCase();
     return trackerInfos.where((trackerInfo) {
       final chains = trackerInfo.chains;
       final process = trackerInfo.metadata.process;
       final networkText = trackerInfo.metadata.network.toLowerCase();
       final hostText = trackerInfo.metadata.host.toLowerCase();
-      final destinationIPText = trackerInfo.metadata.destinationIP
+      final destinationIPText = trackerInfo.metadata.destinationIP.toLowerCase();
+      final remoteDestinationText = trackerInfo.metadata.remoteDestination
           .toLowerCase();
       final processText = trackerInfo.metadata.process.toLowerCase();
       final chainsText = chains.join('').toLowerCase();
+      final descText = trackerInfo.desc.toLowerCase();
+      final ruleText = trackerInfo.rule.toLowerCase();
+      final rulePayloadText = trackerInfo.rulePayload.toLowerCase();
+      final errorText = trackerInfo.error.toLowerCase();
+      final statusText = trackerInfo.statusLabel.toLowerCase();
       return {...chains, process}.containsAll(keywords) &&
           (networkText.contains(lowerQuery) ||
               hostText.contains(lowerQuery) ||
-              destinationIPText.contains(lowQuery) ||
+              destinationIPText.contains(lowerQuery) ||
+              remoteDestinationText.contains(lowerQuery) ||
               processText.contains(lowerQuery) ||
-              chainsText.contains(lowerQuery));
+              chainsText.contains(lowerQuery) ||
+              descText.contains(lowerQuery) ||
+              ruleText.contains(lowerQuery) ||
+              rulePayloadText.contains(lowerQuery) ||
+              errorText.contains(lowerQuery) ||
+              statusText.contains(lowerQuery));
     }).toList();
   }
 }

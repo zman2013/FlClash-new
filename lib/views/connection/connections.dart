@@ -108,6 +108,7 @@ class _ConnectionsViewState extends ConsumerState<ConnectionsView> {
                 (trackerInfo) => TrackerInfoItem(
                   key: Key(trackerInfo.id),
                   trackerInfo: trackerInfo,
+                  showStatus: false,
                   onClickKeyword: (value) {
                     context.commonScaffoldState?.addKeyword(value);
                   },
