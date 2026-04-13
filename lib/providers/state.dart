@@ -85,6 +85,7 @@ UpdateParams updateParams(Ref ref) {
         tun: state.tun.getRealTun(routeMode),
         allowLan: state.allowLan,
         findProcessMode: state.findProcessMode,
+        sniffing: state.sniffer.enable,
         mode: state.mode,
         logLevel: state.logLevel,
         ipv6: state.ipv6,

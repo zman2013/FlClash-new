@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TrackerInfoItem extends ConsumerWidget {
   final TrackerInfo trackerInfo;
+  final bool showStatus;
   final Function(String)? onClickKeyword;
   final Widget? trailing;
   final String detailTitle;
@@ -17,6 +18,7 @@ class TrackerInfoItem extends ConsumerWidget {
   const TrackerInfoItem({
     super.key,
     required this.trackerInfo,
+    required this.showStatus,
     this.onClickKeyword,
     this.trailing,
     required this.detailTitle,
@@ -35,7 +37,44 @@ class TrackerInfoItem extends ConsumerWidget {
         ? '${trackerInfo.progressText} · '
         : '';
     final traffic = Traffic(up: trackerInfo.upload, down: trackerInfo.download);
-    return '${trackerInfo.start.lastUpdateTimeDesc} · $progress${traffic.desc}';
+    final errorText = trackerInfo.isFailed && trackerInfo.error.isNotEmpty
+        ? ' · ${trackerInfo.error}'
+        : '';
+    return '${trackerInfo.start.lastUpdateTimeDesc} · $progress${traffic.desc}$errorText';
+  }
+
+  Widget _buildStatusChip(BuildContext context) {
+    final isFailed = trackerInfo.isFailed;
+    final colorScheme = context.colorScheme;
+    final foregroundColor = isFailed ? colorScheme.error : colorScheme.primary;
+    final backgroundColor = isFailed
+        ? colorScheme.errorContainer
+        : colorScheme.primaryContainer;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        spacing: 4,
+        children: [
+          Icon(
+            isFailed ? Icons.error_outline : Icons.check_circle_outline,
+            size: 14,
+            color: foregroundColor,
+          ),
+          Text(
+            trackerInfo.statusLabel,
+            style: context.textTheme.bodySmall?.copyWith(
+              color: foregroundColor,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -105,7 +144,8 @@ class TrackerInfoItem extends ConsumerWidget {
               },
             ),
           ),
-          if (trailing != null) trailing!,
+          if (showStatus) _buildStatusChip(context),
+          ...?(trailing == null ? null : <Widget>[trailing!]),
         ],
       ),
     );
@@ -162,7 +202,7 @@ class TrackerInfoItem extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             spacing: 12,
             children: [
-              if (icon != null) icon,
+              ...?(icon == null ? null : <Widget>[icon]),
               Flexible(child: title),
             ],
           ),
@@ -284,6 +324,9 @@ class TrackerInfoDetailView extends StatelessWidget {
         title: appLocalizations.creationTime,
         desc: trackerInfo.start.showFull,
       ),
+      _buildItem(title: appLocalizations.status, desc: trackerInfo.statusLabel),
+      if (trackerInfo.error.isNotEmpty)
+        _buildItem(title: appLocalizations.checkError, desc: trackerInfo.error),
       if (_getProcessText().isNotEmpty)
         _buildItem(title: appLocalizations.process, desc: _getProcessText()),
       _buildItem(

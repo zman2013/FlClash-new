@@ -187,7 +187,7 @@ final class UpdateParamsProvider
   }
 }
 
-String _$updateParamsHash() => r'012df72ab0e769a51c573f4692031506d7b1f1b4';
+String _$updateParamsHash() => r'14179a21be97f04c19d584a18823358f8431fd61';
 
 @ProviderFor(proxyState)
 const proxyStateProvider = ProxyStateProvider._();

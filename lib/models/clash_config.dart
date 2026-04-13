@@ -10,6 +10,15 @@ const defaultClashConfig = ClashConfig();
 const defaultTun = Tun();
 const defaultDns = Dns();
 const defaultGeoXUrl = GeoXUrl();
+const defaultSniffer = Sniffer(
+  enable: true,
+  overrideDest: false,
+  sniff: {
+    'QUIC': SnifferConfig(),
+    'TLS': SnifferConfig(),
+    'HTTP': SnifferConfig(ports: ['80', '8080-8880'], overrideDest: true),
+  },
+);
 
 const defaultMixedPort = 7890;
 const defaultKeepAliveInterval = 30;
@@ -149,6 +158,17 @@ abstract class Sniffer with _$Sniffer {
 
   factory Sniffer.fromJson(Map<String, Object?> json) =>
       _$SnifferFromJson(json);
+
+  factory Sniffer.safeFormJson(Map<String, Object?>? json) {
+    if (json == null) {
+      return defaultSniffer;
+    }
+    try {
+      return Sniffer.fromJson(json);
+    } catch (_) {
+      return defaultSniffer;
+    }
+  }
 }
 
 List<String> _formJsonPorts(List? ports) {
@@ -469,6 +489,9 @@ abstract class ClashConfig with _$ClashConfig {
     @Default(GeodataLoader.memconservative)
     @JsonKey(name: 'geodata-loader')
     GeodataLoader geodataLoader,
+    @Default(defaultSniffer)
+    @JsonKey(name: 'sniffer', fromJson: Sniffer.safeFormJson)
+    Sniffer sniffer,
     @Default([]) @JsonKey(name: 'proxy-groups') List<ProxyGroup> proxyGroups,
     @Default([]) List<String> rule,
     @JsonKey(name: 'global-ua') String? globalUa,
