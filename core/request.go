@@ -48,6 +48,10 @@ func requestInfoFromFailure(metadata *C.Metadata, rule C.Rule, proxy C.ProxyAdap
 		ruleName = rule.RuleType().String()
 		rulePayload = rule.Payload()
 	}
+	errorText := "request failed"
+	if err != nil {
+		errorText = err.Error()
+	}
 	return &RequestInfo{
 		ID:          utils.NewUUIDV4().String(),
 		Upload:      0,
@@ -58,6 +62,6 @@ func requestInfoFromFailure(metadata *C.Metadata, rule C.Rule, proxy C.ProxyAdap
 		Rule:        ruleName,
 		RulePayload: rulePayload,
 		Success:     false,
-		Error:       err.Error(),
+		Error:       errorText,
 	}
 }

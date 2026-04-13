@@ -571,12 +571,6 @@ func init() {
 			Data: requestInfoFromTracker(c),
 		})
 	}
-	statistic.DefaultRequestFailureNotify = func(metadata *constant.Metadata, rule constant.Rule, proxy constant.ProxyAdapter, err error) {
-		sendMessage(Message{
-			Type: RequestMessage,
-			Data: requestInfoFromFailure(metadata, rule, proxy, err),
-		})
-	}
 	executor.DefaultProviderLoadedHook = func(providerName string) {
 		sendMessage(Message{
 			Type: LoadedMessage,
