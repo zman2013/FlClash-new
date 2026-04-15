@@ -36,6 +36,58 @@ Future<String> _encodeYaml<T>(T content) async {
   return yaml.encode(content);
 }
 
+String _normalizeGroupNameKey(String value) {
+  return value.replaceAll(RegExp(r'\s+'), '');
+}
+
+String? _findMatchedGroupName(String? value, Iterable<String> groupNames) {
+  if (value == null || value.isEmpty) {
+    return value;
+  }
+  for (final groupName in groupNames) {
+    if (groupName == value) {
+      return groupName;
+    }
+  }
+  final normalizedValue = _normalizeGroupNameKey(value);
+  for (final groupName in groupNames) {
+    if (_normalizeGroupNameKey(groupName) == normalizedValue) {
+      return groupName;
+    }
+  }
+  return value;
+}
+
+Map<String, String> normalizeSelectedMapEntries(
+  Map<String, String> selectedMap,
+  Iterable<String> groupNames,
+) {
+  final nextSelectedMap = <String, String>{};
+  for (final entry in selectedMap.entries) {
+    final groupName = _findMatchedGroupName(entry.key, groupNames) ?? entry.key;
+    nextSelectedMap[groupName] = entry.value;
+  }
+  return nextSelectedMap;
+}
+
+String? normalizeCurrentGroupNameReference(
+  String? currentGroupName,
+  Iterable<String> groupNames,
+) {
+  return _findMatchedGroupName(currentGroupName, groupNames);
+}
+
+List<DomainRoutingItem> normalizeDomainRoutingItems(
+  List<DomainRoutingItem> items,
+  Iterable<String> groupNames,
+) {
+  return items.map((item) {
+    final target =
+        _findMatchedGroupName(item.target, groupNames) ?? item.target;
+    return target == item.target ? item : item.copyWith(target: target);
+  }).toList();
+}
+
 Future<List<Group>> toGroupsTask(ComputeGroupsState data) async {
   return await compute<ComputeGroupsState, List<Group>>(_toGroupsTask, data);
 }
@@ -185,6 +237,12 @@ Future<Map<String, dynamic>> _makeRealProfileTask(
       (item) => Map<String, dynamic>.from(item),
     ),
   );
+  final normalizedDomainItems = normalizeDomainRoutingItems(
+    domainItems,
+    proxyGroups
+        .map((group) => group['name']?.toString() ?? '')
+        .where((name) => name.isNotEmpty),
+  );
   final proxyGroupNames = proxyGroups
       .map((group) => group['name']?.toString() ?? '')
       .where((name) => name.isNotEmpty)
@@ -194,7 +252,7 @@ Future<Map<String, dynamic>> _makeRealProfileTask(
       if ((group['name']?.toString() ?? '').isNotEmpty)
         group['name'].toString(): group,
   };
-  for (final item in domainItems) {
+  for (final item in normalizedDomainItems) {
     if (!item.autoSelectLowestDelay) {
       continue;
     }
@@ -251,10 +309,11 @@ Future<Map<String, dynamic>> _makeRealProfileTask(
     rules = List<String>.from(rawConfig['rules']);
   }
   rawConfig.remove('rules');
-  final domainRules = domainItems.map((item) {
+  final domainRules = normalizedDomainItems.map((item) {
     final generatedGroupName = buildDomainProxyGroupName(item.id);
     final target =
-        item.autoSelectLowestDelay && proxyGroupNames.contains(generatedGroupName)
+        item.autoSelectLowestDelay &&
+            proxyGroupNames.contains(generatedGroupName)
         ? generatedGroupName
         : item.target;
     return item.parsedRule.copyWith(ruleTarget: target).value;

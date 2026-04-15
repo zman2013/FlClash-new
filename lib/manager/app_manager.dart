@@ -71,6 +71,8 @@ class _AppStateManagerState extends ConsumerState<AppStateManager>
         appController.tryCheckIp();
         if (system.isAndroid) {
           appController.tryStartCore();
+        } else {
+          appController.recoverAfterResume();
         }
       });
     }
