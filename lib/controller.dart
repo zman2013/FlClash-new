@@ -682,6 +682,32 @@ extension SetupControllerExt on AppController {
     _ref.read(checkIpNumProvider.notifier).add();
   }
 
+  Future<void> applySystemProxyState({
+    ProxyState? proxyState,
+    bool forceStop = false,
+    bool onlyWhenActive = false,
+  }) async {
+    final state = proxyState ?? _ref.read(proxyStateProvider);
+    if (state == null) {
+      return;
+    }
+    final active = state.isStart && state.systemProxy;
+    if (forceStop) {
+      if (active) {
+        await proxy?.stopProxy();
+      }
+      return;
+    }
+    if (onlyWhenActive && !active) {
+      return;
+    }
+    if (active) {
+      await proxy?.startProxy(state.port, state.bassDomain);
+    } else {
+      await proxy?.stopProxy();
+    }
+  }
+
   void tryCheckIp() {
     final isTimeout = _ref.read(
       networkDetectionProvider.select(
@@ -716,12 +742,18 @@ extension SetupControllerExt on AppController {
     });
   }
 
-  Future<void> recoverAfterResume() async {
+  Future<void> recoverAfterResume({bool restartRunningCore = false}) async {
     if (!_ref.read(initProvider)) {
+      return;
+    }
+    if (restartRunningCore && _ref.read(isStartProvider)) {
+      await restartCore(true);
+      await applySystemProxyState(onlyWhenActive: true);
       return;
     }
     if (_ref.read(coreStatusProvider) != CoreStatus.connected) {
       await restartCore();
+      await applySystemProxyState(onlyWhenActive: true);
       return;
     }
     await updateGroups();
@@ -733,6 +765,7 @@ extension SetupControllerExt on AppController {
     if (mode != Mode.direct && hasCurrentProfile && !hasGroups) {
       await applyProfile(force: true, silence: true);
     }
+    await applySystemProxyState(onlyWhenActive: true);
   }
 
   Future<void> applyProfile({

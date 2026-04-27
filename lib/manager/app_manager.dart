@@ -8,6 +8,7 @@ import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -22,10 +23,15 @@ class AppStateManager extends ConsumerStatefulWidget {
 
 class _AppStateManagerState extends ConsumerState<AppStateManager>
     with WidgetsBindingObserver {
+  static const _powerChannel = MethodChannel('$packageName/power');
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    if (system.isMacOS) {
+      _powerChannel.setMethodCallHandler(_handlePowerEvent);
+    }
     ref.listenManual(checkIpProvider, (prev, next) {
       if (prev != next && next.a && next.c) {
         ref.read(networkDetectionProvider.notifier).startCheck();
@@ -59,7 +65,35 @@ class _AppStateManagerState extends ConsumerState<AppStateManager>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    if (system.isMacOS) {
+      _powerChannel.setMethodCallHandler(null);
+    }
     super.dispose();
+  }
+
+  Future<void> _handlePowerEvent(MethodCall call) async {
+    commonPrint.log('powerEvent ${call.method}');
+    switch (call.method) {
+      case 'willSleep':
+        await appController.applySystemProxyState(forceStop: true);
+        break;
+      case 'didWake':
+        await _recoverAfterResume(restartRunningCore: true);
+        break;
+      default:
+        throw MissingPluginException();
+    }
+  }
+
+  Future<void> _recoverAfterResume({bool restartRunningCore = false}) async {
+    appController.tryCheckIp();
+    if (system.isAndroid) {
+      appController.tryStartCore();
+      return;
+    }
+    await appController.recoverAfterResume(
+      restartRunningCore: restartRunningCore,
+    );
   }
 
   @override
@@ -68,12 +102,7 @@ class _AppStateManagerState extends ConsumerState<AppStateManager>
     if (state == AppLifecycleState.resumed) {
       render?.resume();
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        appController.tryCheckIp();
-        if (system.isAndroid) {
-          appController.tryStartCore();
-        } else {
-          appController.recoverAfterResume();
-        }
+        _recoverAfterResume();
       });
     }
   }
