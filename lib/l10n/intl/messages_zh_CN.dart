@@ -55,11 +55,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "about": MessageLookupByLibrary.simpleMessage("关于"),
     "accessControl": MessageLookupByLibrary.simpleMessage("访问控制"),
     "accessControlAllowDesc": MessageLookupByLibrary.simpleMessage(
-      "只允许选中应用进入VPN",
+      "只允许选中应用使用代理",
     ),
     "accessControlDesc": MessageLookupByLibrary.simpleMessage("配置应用访问代理"),
     "accessControlNotAllowDesc": MessageLookupByLibrary.simpleMessage(
-      "选中应用将会被排除在VPN之外",
+      "选中应用将会绕过代理",
     ),
     "accessControlSettings": MessageLookupByLibrary.simpleMessage("访问控制设置"),
     "account": MessageLookupByLibrary.simpleMessage("账号"),
@@ -189,9 +189,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "delete": MessageLookupByLibrary.simpleMessage("删除"),
     "deleteMultipTip": m1,
     "deleteTip": m2,
-    "desc": MessageLookupByLibrary.simpleMessage(
-      "多平台代理客户端，简单易用。",
-    ),
+    "desc": MessageLookupByLibrary.simpleMessage("多平台代理客户端，简单易用。"),
     "destination": MessageLookupByLibrary.simpleMessage("目标地址"),
     "destinationGeoIP": MessageLookupByLibrary.simpleMessage("目标地理定位"),
     "destinationIPASN": MessageLookupByLibrary.simpleMessage("目标IP ASN"),
@@ -525,9 +523,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "stopVpn": MessageLookupByLibrary.simpleMessage("正在停止VPN..."),
     "style": MessageLookupByLibrary.simpleMessage("风格"),
     "subRule": MessageLookupByLibrary.simpleMessage("子规则"),
-    "subscriptionLoginPassword": MessageLookupByLibrary.simpleMessage(
-      "网站登录密码",
-    ),
+    "subscriptionLoginPassword": MessageLookupByLibrary.simpleMessage("网站登录密码"),
     "subscriptionLoginPasswordHint": MessageLookupByLibrary.simpleMessage(
       "仅加密订阅需要",
     ),

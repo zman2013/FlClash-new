@@ -42,6 +42,16 @@ class _AppStateManagerState extends ConsumerState<AppStateManager>
         appController.savePreferencesDebounce();
       }
     });
+    if (system.isMacOS) {
+      ref.listenManual(
+        vpnSettingProvider.select((state) => state.accessControlProps),
+        (prev, next) {
+          if (prev != next) {
+            appController.applyProfileDebounce(silence: true, force: true);
+          }
+        },
+      );
+    }
     ref.listenManual(needUpdateGroupsProvider, (prev, next) {
       if (prev != next) {
         appController.updateGroupsDebounce();

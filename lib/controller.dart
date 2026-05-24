@@ -830,6 +830,7 @@ extension SetupControllerExt on AppController {
         appendSystemDns: appendSystemDns,
         domainItems: setupState.domainItems,
         addedRules: addedRules,
+        accessControlProps: setupState.accessControlProps,
         defaultUA: defaultUA,
       ),
     );

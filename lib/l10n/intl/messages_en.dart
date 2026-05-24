@@ -62,13 +62,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "about": MessageLookupByLibrary.simpleMessage("About"),
     "accessControl": MessageLookupByLibrary.simpleMessage("AccessControl"),
     "accessControlAllowDesc": MessageLookupByLibrary.simpleMessage(
-      "Only allow selected app to enter VPN",
+      "Only allow selected apps to use proxy",
     ),
     "accessControlDesc": MessageLookupByLibrary.simpleMessage(
       "Configure application access proxy",
     ),
     "accessControlNotAllowDesc": MessageLookupByLibrary.simpleMessage(
-      "The selected application will be excluded from VPN",
+      "Selected apps will bypass proxy",
     ),
     "accessControlSettings": MessageLookupByLibrary.simpleMessage(
       "Access Control Settings",

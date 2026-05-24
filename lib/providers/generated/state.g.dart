@@ -97,7 +97,7 @@ final class NavigationItemsStateProvider
 }
 
 String _$navigationItemsStateHash() =>
-    r'1fc37c14d129f9725b0e62fd53f6b25382f51102';
+    r'beb0bb717b3d8e92734b785e970b26a8e08b56a5';
 
 @ProviderFor(currentNavigationItemsState)
 const currentNavigationItemsStateProvider =
@@ -187,7 +187,7 @@ final class UpdateParamsProvider
   }
 }
 
-String _$updateParamsHash() => r'14179a21be97f04c19d584a18823358f8431fd61';
+String _$updateParamsHash() => r'ee3dc1f4d18ab582ffbc1cfe09b61758d0d4948a';
 
 @ProviderFor(proxyState)
 const proxyStateProvider = ProxyStateProvider._();
@@ -2497,7 +2497,7 @@ final class SetupStateProvider
   }
 }
 
-String _$setupStateHash() => r'c16b488bf4f4d297683fef89f48337bd4a20736a';
+String _$setupStateHash() => r'297d7165a36f2d8b4225ebff4dc7eaaee8fc693d';
 
 final class SetupStateFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<SetupState>, int?> {

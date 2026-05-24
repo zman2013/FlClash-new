@@ -88,6 +88,70 @@ List<DomainRoutingItem> normalizeDomainRoutingItems(
   }).toList();
 }
 
+String? _findMatchRuleTarget(Iterable<String> rules) {
+  for (final rule in rules.toList().reversed) {
+    final parsed = ParsedRule.parseString(rule);
+    if (parsed.ruleAction != RuleAction.MATCH) {
+      continue;
+    }
+    final target = parsed.ruleTarget;
+    if (target != null && target.isNotEmpty) {
+      return target;
+    }
+  }
+  return null;
+}
+
+String? _findFallbackProxyTarget(Set<String> proxyGroupNames) {
+  for (final name in [
+    GroupName.GLOBAL.name,
+    GroupName.Proxy.name,
+    GroupName.Auto.name,
+    GroupName.Fallback.name,
+  ]) {
+    if (proxyGroupNames.contains(name)) {
+      return name;
+    }
+  }
+  return proxyGroupNames.isEmpty ? null : proxyGroupNames.first;
+}
+
+String _buildProcessPathRegexRule(String appPath, String target) {
+  final regex = '^${RegExp.escape(appPath)}(/.*)?\$';
+  return '${RuleAction.PROCESS_PATH_REGEX.value},$regex,$target';
+}
+
+List<String> _buildAccessControlRules({
+  required AccessControlProps accessControlProps,
+  required List<String> profileRules,
+  required Set<String> proxyGroupNames,
+}) {
+  if (!accessControlProps.enable) {
+    return [];
+  }
+  final selectedAppPaths = accessControlProps.currentList
+      .map((item) => item.trim())
+      .where((item) => item.isNotEmpty)
+      .toSet()
+      .toList();
+  if (accessControlProps.mode == AccessControlMode.rejectSelected) {
+    return selectedAppPaths
+        .map((item) => _buildProcessPathRegexRule(item, RuleTarget.DIRECT.name))
+        .toList();
+  }
+  final target =
+      _findMatchRuleTarget(profileRules) ??
+      _findFallbackProxyTarget(proxyGroupNames);
+  if (target == null || target.isEmpty) {
+    return [];
+  }
+  return [
+    for (final item in selectedAppPaths)
+      _buildProcessPathRegexRule(item, target),
+    '${RuleAction.MATCH.value},${RuleTarget.DIRECT.name}',
+  ];
+}
+
 Future<List<Group>> toGroupsTask(ComputeGroupsState data) async {
   return await compute<ComputeGroupsState, List<Group>>(_toGroupsTask, data);
 }
@@ -143,6 +207,8 @@ Future<Map<String, dynamic>> _makeRealProfileTask(
   final profileId = data.profileId;
   final overrideDns = data.overrideDns;
   final addedRules = data.addedRules;
+  final accessControlProps = data.accessControlProps;
+  final enableAppAccessControl = system.isMacOS && accessControlProps.enable;
   final domainItems = data.domainItems;
   final appendSystemDns = data.appendSystemDns;
   final defaultUA = data.defaultUA;
@@ -174,7 +240,9 @@ Future<Map<String, dynamic>> _makeRealProfileTask(
   rawConfig['tproxy-port'] = realPatchConfig.tproxyPort;
   rawConfig['find-process-mode'] = realPatchConfig.findProcessMode.name;
   rawConfig['allow-lan'] = realPatchConfig.allowLan;
-  rawConfig['mode'] = realPatchConfig.mode.name;
+  rawConfig['mode'] = enableAppAccessControl
+      ? Mode.rule.name
+      : realPatchConfig.mode.name;
   if (rawConfig['tun'] == null) {
     rawConfig['tun'] = {};
   }
@@ -309,6 +377,13 @@ Future<Map<String, dynamic>> _makeRealProfileTask(
     rules = List<String>.from(rawConfig['rules']);
   }
   rawConfig.remove('rules');
+  final accessControlRules = enableAppAccessControl
+      ? _buildAccessControlRules(
+          accessControlProps: accessControlProps,
+          profileRules: rules,
+          proxyGroupNames: proxyGroupNames,
+        )
+      : <String>[];
   final domainRules = normalizedDomainItems.map((item) {
     final generatedGroupName = buildDomainProxyGroupName(item.id);
     final target =
@@ -356,9 +431,14 @@ Future<Map<String, dynamic>> _makeRealProfileTask(
     } else {
       finalAddedRules = addedRules.map((e) => e.value).toList();
     }
-    rules = [...domainRules, ...finalAddedRules, ...rules];
-  } else if (domainRules.isNotEmpty) {
-    rules = [...domainRules, ...rules];
+    rules = [
+      ...accessControlRules,
+      ...domainRules,
+      ...finalAddedRules,
+      ...rules,
+    ];
+  } else if (domainRules.isNotEmpty || accessControlRules.isNotEmpty) {
+    rules = [...accessControlRules, ...domainRules, ...rules];
   }
   rawConfig['rules'] = rules;
   return Map<String, dynamic>.from(rawConfig);
