@@ -839,20 +839,20 @@ class AppLocalizations {
     );
   }
 
-  /// `Only allow selected app to enter VPN`
+  /// `Only allow selected apps to use proxy`
   String get accessControlAllowDesc {
     return Intl.message(
-      'Only allow selected app to enter VPN',
+      'Only allow selected apps to use proxy',
       name: 'accessControlAllowDesc',
       desc: '',
       args: [],
     );
   }
 
-  /// `The selected application will be excluded from VPN`
+  /// `Selected apps will bypass proxy`
   String get accessControlNotAllowDesc {
     return Intl.message(
-      'The selected application will be excluded from VPN',
+      'Selected apps will bypass proxy',
       name: 'accessControlNotAllowDesc',
       desc: '',
       args: [],

@@ -248,7 +248,11 @@ extension StateControllerExt on AppController {
   }
 
   SetupParams get setupParams {
-    final selectedMap = _ref.read(selectedMapProvider);
+    final groups = _ref.read(groupsProvider);
+    final selectedMap = normalizeSelectedMapEntries(
+      _ref.read(selectedMapProvider),
+      groups.map((group) => group.name),
+    );
     final testUrl = _ref.read(
       appSettingProvider.select((state) => state.testUrl),
     );
@@ -260,8 +264,11 @@ extension StateControllerExt on AppController {
   }
 
   String? getCurrentGroupName() {
-    final currentGroupName = _ref.read(
-      currentProfileProvider.select((state) => state?.currentGroupName),
+    final currentGroupName = normalizeCurrentGroupNameReference(
+      _ref.read(
+        currentProfileProvider.select((state) => state?.currentGroupName),
+      ),
+      _ref.read(groupsProvider).map((group) => group.name),
     );
     return currentGroupName;
   }
@@ -481,6 +488,7 @@ extension ProxiesControllerExt on AppController {
   }
 
   Future<void> updateGroups() async {
+    final previousGroups = _ref.read(groupsProvider);
     try {
       commonPrint.log('updateGroups');
       _ref.read(groupsProvider.notifier).value = await retry(
@@ -495,18 +503,21 @@ extension ProxiesControllerExt on AppController {
           final selectedMap = _ref.read(
             currentProfileProvider.select((state) => state?.selectedMap ?? {}),
           );
-          return await coreController.getProxiesGroups(
+          final groups = await coreController.getProxiesGroups(
             selectedMap: selectedMap,
             sortType: sortType,
             delayMap: delayMap,
             defaultTestUrl: testUrl,
           );
+          return groups;
         },
+        maxAttempts: 6,
+        delay: const Duration(milliseconds: 500),
         retryIf: (res) => res.isEmpty,
       );
     } catch (e) {
       commonPrint.log('updateGroups error: $e');
-      _ref.read(groupsProvider.notifier).value = [];
+      _ref.read(groupsProvider.notifier).value = previousGroups;
     }
   }
 
@@ -671,6 +682,32 @@ extension SetupControllerExt on AppController {
     _ref.read(checkIpNumProvider.notifier).add();
   }
 
+  Future<void> applySystemProxyState({
+    ProxyState? proxyState,
+    bool forceStop = false,
+    bool onlyWhenActive = false,
+  }) async {
+    final state = proxyState ?? _ref.read(proxyStateProvider);
+    if (state == null) {
+      return;
+    }
+    final active = state.isStart && state.systemProxy;
+    if (forceStop) {
+      if (active) {
+        await proxy?.stopProxy();
+      }
+      return;
+    }
+    if (onlyWhenActive && !active) {
+      return;
+    }
+    if (active) {
+      await proxy?.startProxy(state.port, state.bassDomain);
+    } else {
+      await proxy?.stopProxy();
+    }
+  }
+
   void tryCheckIp() {
     final isTimeout = _ref.read(
       networkDetectionProvider.select(
@@ -703,6 +740,32 @@ extension SetupControllerExt on AppController {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       applyProfile();
     });
+  }
+
+  Future<void> recoverAfterResume({bool restartRunningCore = false}) async {
+    if (!_ref.read(initProvider)) {
+      return;
+    }
+    if (restartRunningCore && _ref.read(isStartProvider)) {
+      await restartCore(true);
+      await applySystemProxyState(onlyWhenActive: true);
+      return;
+    }
+    if (_ref.read(coreStatusProvider) != CoreStatus.connected) {
+      await restartCore();
+      await applySystemProxyState(onlyWhenActive: true);
+      return;
+    }
+    await updateGroups();
+    final mode = _ref.read(
+      patchClashConfigProvider.select((state) => state.mode),
+    );
+    final hasCurrentProfile = _ref.read(currentProfileProvider) != null;
+    final hasGroups = _ref.read(groupsProvider).isNotEmpty;
+    if (mode != Mode.direct && hasCurrentProfile && !hasGroups) {
+      await applyProfile(force: true, silence: true);
+    }
+    await applySystemProxyState(onlyWhenActive: true);
   }
 
   Future<void> applyProfile({
@@ -767,6 +830,7 @@ extension SetupControllerExt on AppController {
         appendSystemDns: appendSystemDns,
         domainItems: setupState.domainItems,
         addedRules: addedRules,
+        accessControlProps: setupState.accessControlProps,
         defaultUA: defaultUA,
       ),
     );
@@ -813,6 +877,11 @@ extension SetupControllerExt on AppController {
       setupState: setupState,
       patchConfig: realPatchConfig,
     );
+    final groupNames = ((config['proxy-groups'] as List?) ?? [])
+        .map((item) => (item as Map)['name']?.toString() ?? '')
+        .where((name) => name.isNotEmpty)
+        .toSet();
+    _repairGroupReferences(groupNames);
     final configFilePath = await appPath.configFilePath;
     final yamlString = await encodeYamlTask(config);
     await File(configFilePath).safeWriteAsString(yamlString);
@@ -825,6 +894,44 @@ extension SetupControllerExt on AppController {
       throw message;
     }
     addCheckIp();
+  }
+
+  void _repairGroupReferences(Set<String> groupNames) {
+    if (groupNames.isEmpty) {
+      return;
+    }
+    final profile = _ref.read(currentProfileProvider);
+    if (profile != null) {
+      final selectedMap = normalizeSelectedMapEntries(
+        profile.selectedMap,
+        groupNames,
+      );
+      final currentGroupName = normalizeCurrentGroupNameReference(
+        profile.currentGroupName,
+        groupNames,
+      );
+      if (selectedMap.toString() != profile.selectedMap.toString() ||
+          currentGroupName != profile.currentGroupName) {
+        _ref
+            .read(profilesProvider.notifier)
+            .put(
+              profile.copyWith(
+                selectedMap: selectedMap,
+                currentGroupName: currentGroupName,
+              ),
+            );
+      }
+    }
+    final domainProps = _ref.read(domainSettingProvider);
+    final normalizedItems = normalizeDomainRoutingItems(
+      domainProps.items,
+      groupNames,
+    );
+    if (normalizedItems.toString() != domainProps.items.toString()) {
+      _ref.read(domainSettingProvider.notifier).value = domainProps.copyWith(
+        items: normalizedItems,
+      );
+    }
   }
 }
 

@@ -47,14 +47,13 @@ NavigationItemsState navigationItemsState(Ref ref) {
   final hasProfiles = ref.watch(
     profilesProvider.select((state) => state.isNotEmpty),
   );
-  final hasProxies = ref.watch(
-    currentGroupsStateProvider.select((state) => state.value.isNotEmpty),
+  final hasGroups = ref.watch(
+    groupsProvider.select((state) => state.isNotEmpty),
   );
-  final isInit = ref.watch(initProvider);
   return NavigationItemsState(
     value: navigation.getItems(
       openLogs: openLogs,
-      hasProxies: !isInit ? hasProfiles : hasProxies,
+      hasProxies: hasProfiles || hasGroups,
     ),
   );
 }
@@ -79,6 +78,9 @@ UpdateParams updateParams(Ref ref) {
   final routeMode = ref.watch(
     networkSettingProvider.select((state) => state.routeMode),
   );
+  final appAccessControlEnabled = ref.watch(
+    vpnSettingProvider.select((state) => state.accessControlProps.enable),
+  );
   return ref.watch(
     patchClashConfigProvider.select(
       (state) => UpdateParams(
@@ -86,7 +88,9 @@ UpdateParams updateParams(Ref ref) {
         allowLan: state.allowLan,
         findProcessMode: state.findProcessMode,
         sniffing: state.sniffer.enable,
-        mode: state.mode,
+        mode: appAccessControlEnabled && system.isMacOS
+            ? Mode.rule
+            : state.mode,
         logLevel: state.logLevel,
         ipv6: state.ipv6,
         tcpConcurrent: state.tcpConcurrent,
@@ -699,12 +703,16 @@ Future<SetupState> setupState(Ref ref, int? profileId) async {
   final addedRules = databaseRules
       .where((rule) => !isDomainProxyRule(rule))
       .toList();
+  final accessControlProps = ref.watch(
+    vpnSettingProvider.select((state) => state.accessControlProps),
+  );
   return SetupState(
     profileId: profileId,
     profileLastUpdateDate: profileLastUpdateDate,
     overwriteType: overwriteType,
     domainItems: domainItems,
     addedRules: addedRules,
+    accessControlProps: accessControlProps,
     script: script,
     overrideDns: overrideDns,
     dns: dns,

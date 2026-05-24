@@ -1,3 +1,4 @@
+import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/views/views.dart';
@@ -33,12 +34,20 @@ class Navigation {
         builder: (_) =>
             const ProfilesView(key: GlobalObjectKey(PageLabel.profiles)),
       ),
+      if (system.isMacOS)
+        NavigationItem(
+          icon: const Icon(Icons.view_list),
+          label: PageLabel.accessControl,
+          description: 'accessControlDesc',
+          builder: (_) =>
+              const AccessView(key: GlobalObjectKey(PageLabel.accessControl)),
+          modes: [NavigationItemMode.desktop],
+        ),
       NavigationItem(
         icon: const Icon(Icons.language),
         label: PageLabel.domain,
-        builder: (_) => const DomainRulesView(
-          key: GlobalObjectKey(PageLabel.domain),
-        ),
+        builder: (_) =>
+            const DomainRulesView(key: GlobalObjectKey(PageLabel.domain)),
         modes: [NavigationItemMode.desktop, NavigationItemMode.more],
       ),
       NavigationItem(

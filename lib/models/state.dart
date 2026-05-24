@@ -360,6 +360,7 @@ abstract class MakeRealProfileState with _$MakeRealProfileState {
     required bool appendSystemDns,
     required List<DomainRoutingItem> domainItems,
     required List<Rule> addedRules,
+    required AccessControlProps accessControlProps,
     required String defaultUA,
   }) = _MakeRealProfileState;
 }
@@ -383,6 +384,7 @@ abstract class SetupState with _$SetupState {
     required OverwriteType overwriteType,
     required List<DomainRoutingItem> domainItems,
     required List<Rule> addedRules,
+    required AccessControlProps accessControlProps,
     required Script? script,
     required bool overrideDns,
     required Dns dns,
@@ -407,6 +409,7 @@ extension SetupStateExt on SetupState {
             lastSetupState.domainItems,
           ) ||
           !ruleListEquality.equals(addedRules, lastSetupState.addedRules) ||
+          accessControlProps != lastSetupState.accessControlProps ||
           scriptIsChange) {
         return true;
       }
@@ -422,6 +425,9 @@ extension SetupStateExt on SetupState {
               lastSetupState.domainItems,
             ) ||
             !ruleListEquality.equals(addedRules, lastSetupState.addedRules)) {
+          return true;
+        }
+        if (accessControlProps != lastSetupState.accessControlProps) {
           return true;
         }
       }

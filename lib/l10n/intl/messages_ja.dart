@@ -55,13 +55,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "about": MessageLookupByLibrary.simpleMessage("について"),
     "accessControl": MessageLookupByLibrary.simpleMessage("アクセス制御"),
     "accessControlAllowDesc": MessageLookupByLibrary.simpleMessage(
-      "選択したアプリのみVPNを許可",
+      "選択したアプリのみプロキシを使用",
     ),
     "accessControlDesc": MessageLookupByLibrary.simpleMessage(
       "アプリケーションのプロキシアクセスを設定",
     ),
     "accessControlNotAllowDesc": MessageLookupByLibrary.simpleMessage(
-      "選択したアプリをVPNから除外",
+      "選択したアプリはプロキシをバイパス",
     ),
     "accessControlSettings": MessageLookupByLibrary.simpleMessage("アクセス制御設定"),
     "account": MessageLookupByLibrary.simpleMessage("アカウント"),

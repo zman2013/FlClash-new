@@ -1,4 +1,4 @@
-import 'package:fl_clash/common/proxy.dart';
+import 'package:fl_clash/controller.dart';
 import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/providers/state.dart';
 import 'package:flutter/material.dart';
@@ -15,28 +15,17 @@ class ProxyManager extends ConsumerStatefulWidget {
 
 class _ProxyManagerState extends ConsumerState<ProxyManager> {
   Future<void> _updateProxy(ProxyState proxyState) async {
-    final isStart = proxyState.isStart;
-    final systemProxy = proxyState.systemProxy;
-    final port = proxyState.port;
-    if (isStart && systemProxy) {
-      proxy?.startProxy(port, proxyState.bassDomain);
-    } else {
-      proxy?.stopProxy();
-    }
+    await appController.applySystemProxyState(proxyState: proxyState);
   }
 
   @override
   void initState() {
     super.initState();
-    ref.listenManual(
-      proxyStateProvider,
-      (prev, next) {
-        if (prev != next) {
-          _updateProxy(next);
-        }
-      },
-      fireImmediately: true,
-    );
+    ref.listenManual(proxyStateProvider, (prev, next) {
+      if (prev != next) {
+        _updateProxy(next);
+      }
+    }, fireImmediately: true);
   }
 
   @override

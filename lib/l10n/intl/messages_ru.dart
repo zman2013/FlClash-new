@@ -61,13 +61,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "about": MessageLookupByLibrary.simpleMessage("О программе"),
     "accessControl": MessageLookupByLibrary.simpleMessage("Контроль доступа"),
     "accessControlAllowDesc": MessageLookupByLibrary.simpleMessage(
-      "Разрешить только выбранным приложениям доступ к VPN",
+      "Разрешить прокси только выбранным приложениям",
     ),
     "accessControlDesc": MessageLookupByLibrary.simpleMessage(
       "Настройка доступа приложений к прокси",
     ),
     "accessControlNotAllowDesc": MessageLookupByLibrary.simpleMessage(
-      "Выбранные приложения будут исключены из VPN",
+      "Выбранные приложения будут обходить прокси",
     ),
     "accessControlSettings": MessageLookupByLibrary.simpleMessage(
       "Настройки контроля доступа",

@@ -33,9 +33,17 @@ class _AccessViewState extends ConsumerState<AccessView> {
     super.initState();
     _controller = ScrollController();
     _completer.complete(appController.getPackages());
-    final accessControl = ref
+    var accessControl = ref
         .read(vpnSettingProvider.select((state) => state.accessControlProps))
         .copyWith();
+    if (system.isMacOS &&
+        !accessControl.enable &&
+        accessControl.acceptList.isEmpty &&
+        accessControl.rejectList.isEmpty) {
+      accessControl = accessControl.copyWith(
+        mode: AccessControlMode.acceptSelected,
+      );
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(accessControlStateProvider.notifier).value = accessControl;
       _isInit = true;
@@ -61,7 +69,11 @@ class _AccessViewState extends ConsumerState<AccessView> {
         } else {
           newSet.addAll(allValueList);
         }
-        return state.copyWithNewList(newSet.toList());
+        final nextState = state.copyWithNewList(newSet.toList());
+        if (system.isMacOS) {
+          return nextState.copyWith(enable: nextState.currentList.isNotEmpty);
+        }
+        return nextState;
       });
     }
 
@@ -128,7 +140,11 @@ class _AccessViewState extends ConsumerState<AccessView> {
     ref.read(accessControlStateProvider.notifier).update((state) {
       final newSet = Set<String>.from(state.currentList)
         ..addOrRemove(packageName);
-      return state.copyWithNewList(newSet.toList());
+      final nextState = state.copyWithNewList(newSet.toList());
+      if (system.isMacOS) {
+        return nextState.copyWith(enable: nextState.currentList.isNotEmpty);
+      }
+      return nextState;
     });
   }
 
@@ -172,9 +188,15 @@ class _AccessViewState extends ConsumerState<AccessView> {
         .map((item) => item.packageName)
         .toSet()
         .toList();
-    return accessControl.copyWithNewList(
+    final nextAccessControl = accessControl.copyWithNewList(
       accessControl.currentList.intersection(viewPackageNames),
     );
+    if (system.isMacOS) {
+      return nextAccessControl.copyWith(
+        enable: nextAccessControl.currentList.isNotEmpty,
+      );
+    }
+    return nextAccessControl;
   }
 
   void _handleSave() {
@@ -234,9 +256,13 @@ class _AccessViewState extends ConsumerState<AccessView> {
       final text = data?.text;
       if (text == null) return;
       final list = text.split('\n');
-      ref
-          .read(accessControlStateProvider.notifier)
-          .update((state) => state.copyWithNewList(list.toSet().toList()));
+      ref.read(accessControlStateProvider.notifier).update((state) {
+        final nextState = state.copyWithNewList(list.toSet().toList());
+        if (system.isMacOS) {
+          return nextState.copyWith(enable: nextState.currentList.isNotEmpty);
+        }
+        return nextState;
+      });
     });
   }
 
@@ -275,11 +301,12 @@ class _AccessViewState extends ConsumerState<AccessView> {
               icon: Icons.emergency_outlined,
               label: appLocalizations.action,
               subItems: [
-                PopupMenuItemData(
-                  icon: Icons.auto_awesome,
-                  label: appLocalizations.intelligentSelected,
-                  onPressed: _intelligentSelected,
-                ),
+                if (system.isAndroid)
+                  PopupMenuItemData(
+                    icon: Icons.auto_awesome,
+                    label: appLocalizations.intelligentSelected,
+                    onPressed: _intelligentSelected,
+                  ),
                 PopupMenuItemData(
                   icon: Icons.content_copy,
                   label: appLocalizations.clipboardExport,

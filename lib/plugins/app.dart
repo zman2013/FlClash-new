@@ -93,4 +93,4 @@ class App {
   }
 }
 
-final app = system.isAndroid ? App() : null;
+final app = system.isAndroid || system.isMacOS ? App() : null;
