@@ -7,6 +7,7 @@ export 'proxy_manager.dart';
 export 'status_manager.dart';
 export 'theme_manager.dart';
 export 'tile_manager.dart';
+export 'traffic_analysis_manager.dart';
 export 'tray_manager.dart';
 export 'vpn_manager.dart';
 export 'window_manager.dart';

@@ -66,6 +66,16 @@ class Navigation {
         description: 'connectionsDesc',
         modes: [NavigationItemMode.desktop, NavigationItemMode.more],
       ),
+      if (system.isMacOS)
+        NavigationItem(
+          icon: const Icon(Icons.query_stats),
+          label: PageLabel.trafficAnalysis,
+          builder: (_) => const TrafficAnalysisView(
+            key: GlobalObjectKey(PageLabel.trafficAnalysis),
+          ),
+          description: 'trafficAnalysisDesc',
+          modes: [NavigationItemMode.desktop, NavigationItemMode.more],
+        ),
       NavigationItem(
         icon: Icon(Icons.storage),
         label: PageLabel.resources,

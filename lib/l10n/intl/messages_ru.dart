@@ -227,6 +227,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "connectionsDesc": MessageLookupByLibrary.simpleMessage(
       "Просмотр текущих данных о соединениях",
     ),
+    "trafficAnalysis": MessageLookupByLibrary.simpleMessage("Анализ трафика"),
+    "trafficAnalysisByApp": MessageLookupByLibrary.simpleMessage("Приложение"),
+    "trafficAnalysisByDestination": MessageLookupByLibrary.simpleMessage(
+      "Назначение",
+    ),
+    "trafficAnalysisDesc": MessageLookupByLibrary.simpleMessage(
+      "Анализ проксируемого трафика за последний час",
+    ),
+    "trafficAnalysisLastHour": MessageLookupByLibrary.simpleMessage(
+      "Последний час",
+    ),
+    "trafficAnalysisLogPath": MessageLookupByLibrary.simpleMessage(
+      "Журнал трафика",
+    ),
+    "trafficAnalysisReset": MessageLookupByLibrary.simpleMessage("Сброс"),
+    "trafficAnalysisTotal": MessageLookupByLibrary.simpleMessage("Итого"),
     "connectivity": MessageLookupByLibrary.simpleMessage("Связь："),
     "contactMe": MessageLookupByLibrary.simpleMessage("Свяжитесь со мной"),
     "content": MessageLookupByLibrary.simpleMessage("Содержание"),

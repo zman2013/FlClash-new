@@ -222,6 +222,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "connectionsDesc": MessageLookupByLibrary.simpleMessage(
       "View current connections data",
     ),
+    "trafficAnalysis": MessageLookupByLibrary.simpleMessage("Traffic analysis"),
+    "trafficAnalysisByApp": MessageLookupByLibrary.simpleMessage("App"),
+    "trafficAnalysisByDestination": MessageLookupByLibrary.simpleMessage(
+      "Destination",
+    ),
+    "trafficAnalysisDesc": MessageLookupByLibrary.simpleMessage(
+      "Analyze proxied traffic usage in the last hour",
+    ),
+    "trafficAnalysisLastHour": MessageLookupByLibrary.simpleMessage(
+      "Last hour",
+    ),
+    "trafficAnalysisLogPath": MessageLookupByLibrary.simpleMessage(
+      "Traffic log",
+    ),
+    "trafficAnalysisReset": MessageLookupByLibrary.simpleMessage("Reset"),
+    "trafficAnalysisTotal": MessageLookupByLibrary.simpleMessage("Total"),
     "connectivity": MessageLookupByLibrary.simpleMessage("Connectivity："),
     "contactMe": MessageLookupByLibrary.simpleMessage("Contact me"),
     "content": MessageLookupByLibrary.simpleMessage("Content"),

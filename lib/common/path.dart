@@ -91,6 +91,11 @@ class AppPath {
     return join(mHomeDirPath, 'config.yaml');
   }
 
+  Future<String> get trafficAnalysisLogPath async {
+    final mHomeDirPath = await homeDirPath;
+    return join(mHomeDirPath, 'traffic_analysis.jsonl');
+  }
+
   Future<String> get sharedFilePath async {
     final mHomeDirPath = await homeDirPath;
     return join(mHomeDirPath, 'shared.json');
