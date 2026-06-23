@@ -141,6 +141,17 @@ String _buildProcessPathRegexRule(String appPath, String target) {
   return '${RuleAction.PROCESS_PATH_REGEX.value},$regex,$target';
 }
 
+String _buildProcessNameRule(String packageName, String target) {
+  return '${RuleAction.PROCESS_NAME.value},$packageName,$target';
+}
+
+String _buildProcessRule(String appIdentifier, String target) {
+  if (system.isAndroid) {
+    return _buildProcessNameRule(appIdentifier, target);
+  }
+  return _buildProcessPathRegexRule(appIdentifier, target);
+}
+
 List<String> _buildAccessControlRules({
   required AccessControlProps accessControlProps,
   required List<String> profileRules,
@@ -157,7 +168,7 @@ List<String> _buildAccessControlRules({
   if (accessControlProps.mode == AccessControlMode.rejectSelected) {
     return selectedAppPaths
         .map(
-          (item) => _buildProcessPathRegexRule(
+          (item) => _buildProcessRule(
             item,
             accessControlProps.appProxyMap[item]?.trim().isNotEmpty == true
                 ? accessControlProps.appProxyMap[item]!.trim()
@@ -174,7 +185,7 @@ List<String> _buildAccessControlRules({
   }
   return [
     for (final item in selectedAppPaths)
-      _buildProcessPathRegexRule(
+      _buildProcessRule(
         item,
         accessControlProps.appProxyMap[item]?.trim().isNotEmpty == true
             ? accessControlProps.appProxyMap[item]!.trim()
@@ -240,7 +251,8 @@ Future<Map<String, dynamic>> _makeRealProfileTask(
   final overrideDns = data.overrideDns;
   final addedRules = data.addedRules;
   final accessControlProps = data.accessControlProps;
-  final enableAppAccessControl = system.isMacOS && accessControlProps.enable;
+  final enableAppAccessControl =
+      (system.isMacOS || system.isAndroid) && accessControlProps.enable;
   final domainItems = data.domainItems;
   final appendSystemDns = data.appendSystemDns;
   final defaultUA = data.defaultUA;

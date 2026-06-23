@@ -29,7 +29,12 @@ class _TrafficAnalysisManagerState
         trafficAnalysisStore.resetActiveConnections();
       }
     });
-    if (system.isMacOS) {
+    ref.listenManual(packagesProvider, (prev, next) {
+      trafficAnalysisStore.setAppLabels({
+        for (final package in next) package.packageName: package.label,
+      });
+    }, fireImmediately: true);
+    if (system.isMacOS || system.isAndroid) {
       _timer = Timer.periodic(const Duration(seconds: 1), (_) => _poll());
       unawaited(_poll());
     }

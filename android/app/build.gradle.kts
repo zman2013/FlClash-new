@@ -5,8 +5,6 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("dev.flutter.flutter-gradle-plugin")
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
 }
 
 val localPropertiesFile = rootProject.file("local.properties")
@@ -22,7 +20,14 @@ val mKeyAlias: String? = localProperties.getProperty("keyAlias")
 val mKeyPassword: String? = localProperties.getProperty("keyPassword")
 val isRelease =
     mStoreFile.exists() && mStorePassword != null && mKeyAlias != null && mKeyPassword != null
+val hasGoogleServicesConfig = file("google-services.json").exists() ||
+    file("src/debug/google-services.json").exists() ||
+    file("src/release/google-services.json").exists()
 
+if (hasGoogleServicesConfig) {
+    apply(plugin = "com.google.gms.google-services")
+    apply(plugin = "com.google.firebase.crashlytics")
+}
 
 android {
     namespace = "com.follow.clash"
