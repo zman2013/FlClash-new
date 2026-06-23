@@ -493,6 +493,8 @@ class _AccessViewState extends ConsumerState<AccessView> {
 }
 
 class PackageListItem extends StatelessWidget {
+  static const _directProxyLabel = 'DIRECT';
+
   final Package package;
   final bool value;
   final String proxyName;
@@ -515,8 +517,7 @@ class PackageListItem extends StatelessWidget {
       child: OptionsDialog<String>(
         title: appLocalizations.proxyGroup,
         options: ['', ...proxyOptions],
-        textBuilder: (value) =>
-            value.isEmpty ? appLocalizations.defaultText : value,
+        textBuilder: (value) => value.isEmpty ? _directProxyLabel : value,
         value: proxyName,
       ),
     );
@@ -528,9 +529,7 @@ class PackageListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final proxyText = proxyName.isEmpty
-        ? appLocalizations.defaultText
-        : proxyName;
+    final proxyText = proxyName.isEmpty ? _directProxyLabel : proxyName;
     return ListItem(
       leading: SizedBox(
         width: 48,

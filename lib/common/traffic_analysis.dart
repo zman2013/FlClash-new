@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/models/models.dart';
 import 'package:flutter/foundation.dart';
 
@@ -142,6 +143,9 @@ class TrafficAnalysisStore extends ValueNotifier<TrafficAnalysisSnapshot> {
     num down = 0;
 
     for (final record in _records) {
+      if (!_isProxiedRecord(record)) {
+        continue;
+      }
       up += record.up;
       down += record.down;
       appMap.update(
@@ -247,11 +251,25 @@ class _ConnectionTraffic {
 }
 
 bool _isProxied(TrackerInfo trackerInfo) {
-  if (trackerInfo.chains.isEmpty) {
+  return _isProxiedChains(trackerInfo.chains);
+}
+
+bool _isProxiedRecord(TrafficAnalysisRecord record) {
+  return _isProxiedChains(record.chains);
+}
+
+bool _isProxiedChains(List<String> chains) {
+  final normalizedChains = chains
+      .map((chain) => chain.trim().toUpperCase())
+      .where((chain) => chain.isNotEmpty);
+  if (normalizedChains.isEmpty) {
     return false;
   }
-  final outbound = trackerInfo.chains.last.toUpperCase();
-  return outbound != 'DIRECT' && !outbound.startsWith('REJECT');
+  return normalizedChains.every(
+    (chain) =>
+        chain != RuleTarget.DIRECT.name &&
+        !chain.startsWith(RuleTarget.REJECT.name),
+  );
 }
 
 String _destinationOf(TrackerInfo trackerInfo) {

@@ -24,7 +24,7 @@ class _TrafficAnalysisManagerState
   @override
   void initState() {
     super.initState();
-    ref.listenManual(runTimeProvider, (prev, next) {
+    ref.listenManual(coreStatusProvider, (prev, next) {
       if (prev != next) {
         trafficAnalysisStore.resetActiveConnections();
       }
