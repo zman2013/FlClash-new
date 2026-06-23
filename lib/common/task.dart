@@ -88,6 +88,26 @@ List<DomainRoutingItem> normalizeDomainRoutingItems(
   }).toList();
 }
 
+AccessControlProps normalizeAccessControlProxyMap(
+  AccessControlProps accessControlProps,
+  Iterable<String> groupNames,
+) {
+  if (accessControlProps.appProxyMap.isEmpty) {
+    return accessControlProps;
+  }
+  final nextAppProxyMap = <String, String>{};
+  for (final entry in accessControlProps.appProxyMap.entries) {
+    final appPath = entry.key.trim();
+    final proxyName = entry.value.trim();
+    if (appPath.isEmpty || proxyName.isEmpty) {
+      continue;
+    }
+    final target = _findMatchedGroupName(proxyName, groupNames) ?? proxyName;
+    nextAppProxyMap[appPath] = target;
+  }
+  return accessControlProps.copyWith(appProxyMap: nextAppProxyMap);
+}
+
 String? _findMatchRuleTarget(Iterable<String> rules) {
   for (final rule in rules.toList().reversed) {
     final parsed = ParsedRule.parseString(rule);
@@ -136,7 +156,14 @@ List<String> _buildAccessControlRules({
       .toList();
   if (accessControlProps.mode == AccessControlMode.rejectSelected) {
     return selectedAppPaths
-        .map((item) => _buildProcessPathRegexRule(item, RuleTarget.DIRECT.name))
+        .map(
+          (item) => _buildProcessPathRegexRule(
+            item,
+            accessControlProps.appProxyMap[item]?.trim().isNotEmpty == true
+                ? accessControlProps.appProxyMap[item]!.trim()
+                : RuleTarget.DIRECT.name,
+          ),
+        )
         .toList();
   }
   final target =
@@ -147,7 +174,12 @@ List<String> _buildAccessControlRules({
   }
   return [
     for (final item in selectedAppPaths)
-      _buildProcessPathRegexRule(item, target),
+      _buildProcessPathRegexRule(
+        item,
+        accessControlProps.appProxyMap[item]?.trim().isNotEmpty == true
+            ? accessControlProps.appProxyMap[item]!.trim()
+            : target,
+      ),
     '${RuleAction.MATCH.value},${RuleTarget.DIRECT.name}',
   ];
 }
