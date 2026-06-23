@@ -108,34 +108,6 @@ AccessControlProps normalizeAccessControlProxyMap(
   return accessControlProps.copyWith(appProxyMap: nextAppProxyMap);
 }
 
-String? _findMatchRuleTarget(Iterable<String> rules) {
-  for (final rule in rules.toList().reversed) {
-    final parsed = ParsedRule.parseString(rule);
-    if (parsed.ruleAction != RuleAction.MATCH) {
-      continue;
-    }
-    final target = parsed.ruleTarget;
-    if (target != null && target.isNotEmpty) {
-      return target;
-    }
-  }
-  return null;
-}
-
-String? _findFallbackProxyTarget(Set<String> proxyGroupNames) {
-  for (final name in [
-    GroupName.GLOBAL.name,
-    GroupName.Proxy.name,
-    GroupName.Auto.name,
-    GroupName.Fallback.name,
-  ]) {
-    if (proxyGroupNames.contains(name)) {
-      return name;
-    }
-  }
-  return proxyGroupNames.isEmpty ? null : proxyGroupNames.first;
-}
-
 String _buildProcessPathRegexRule(String appPath, String target) {
   final regex = '^${RegExp.escape(appPath)}(/.*)?\$';
   return '${RuleAction.PROCESS_PATH_REGEX.value},$regex,$target';
@@ -154,8 +126,6 @@ String _buildProcessRule(String appIdentifier, String target) {
 
 List<String> _buildAccessControlRules({
   required AccessControlProps accessControlProps,
-  required List<String> profileRules,
-  required Set<String> proxyGroupNames,
 }) {
   if (!accessControlProps.enable) {
     return [];
@@ -166,22 +136,16 @@ List<String> _buildAccessControlRules({
       .toSet()
       .toList();
   if (accessControlProps.mode == AccessControlMode.rejectSelected) {
-    return selectedAppPaths
-        .map(
-          (item) => _buildProcessRule(
-            item,
-            accessControlProps.appProxyMap[item]?.trim().isNotEmpty == true
-                ? accessControlProps.appProxyMap[item]!.trim()
-                : RuleTarget.DIRECT.name,
-          ),
-        )
-        .toList();
-  }
-  final target =
-      _findMatchRuleTarget(profileRules) ??
-      _findFallbackProxyTarget(proxyGroupNames);
-  if (target == null || target.isEmpty) {
-    return [];
+    return [
+      for (final item in selectedAppPaths)
+        _buildProcessRule(
+          item,
+          accessControlProps.appProxyMap[item]?.trim().isNotEmpty == true
+              ? accessControlProps.appProxyMap[item]!.trim()
+              : RuleTarget.DIRECT.name,
+        ),
+      '${RuleAction.MATCH.value},${RuleTarget.DIRECT.name}',
+    ];
   }
   return [
     for (final item in selectedAppPaths)
@@ -189,7 +153,7 @@ List<String> _buildAccessControlRules({
         item,
         accessControlProps.appProxyMap[item]?.trim().isNotEmpty == true
             ? accessControlProps.appProxyMap[item]!.trim()
-            : target,
+            : RuleTarget.DIRECT.name,
       ),
     '${RuleAction.MATCH.value},${RuleTarget.DIRECT.name}',
   ];
@@ -422,11 +386,7 @@ Future<Map<String, dynamic>> _makeRealProfileTask(
   }
   rawConfig.remove('rules');
   final accessControlRules = enableAppAccessControl
-      ? _buildAccessControlRules(
-          accessControlProps: accessControlProps,
-          profileRules: rules,
-          proxyGroupNames: proxyGroupNames,
-        )
+      ? _buildAccessControlRules(accessControlProps: accessControlProps)
       : <String>[];
   final domainRules = normalizedDomainItems.map((item) {
     final generatedGroupName = buildDomainProxyGroupName(item.id);

@@ -39,7 +39,7 @@ Tags: macOS, Flutter, Riverpod, Freezed, traffic_analysis.jsonl, app proxy, doma
 - 域名规则先规范化目标代理组，必要时克隆 hidden proxy group 用于自动选择最低延迟。
 - 应用级代理复用 `AccessControlProps.currentList`，新增 `appProxyMap` 存每个 app path 对应代理组。
 - 生成规则使用 `PROCESS_PATH_REGEX`，规则必须插到用户 profile rules 前面。
-- allow-selected 模式下，选中 app 走指定代理或 fallback target，尾部补 `MATCH,DIRECT` 保持未选中 app 直连。
+- allow-selected 模式下，选中 app 只有指定了 per-app proxy 才走代理；未指定代理组时也生成 `DIRECT`，尾部补 `MATCH,DIRECT` 保持未选中 app 直连。
 - reject-selected 模式下，选中 app 默认 `DIRECT`，但如果配置了 per-app proxy，则走指定代理。
 
 配置与 UI：
@@ -52,11 +52,13 @@ Tags: macOS, Flutter, Riverpod, Freezed, traffic_analysis.jsonl, app proxy, doma
 
 1. 流量统计要按 delta 算，不能把 `TrackerInfo.upload/download` 当作每次新增值直接累加。
 2. 采样失败时保留连接基线，避免下一次成功采样把长连接重复计入。
-3. 运行时重启、核心重启或配置切换时清空 active connection baseline，避免不同 core session 的连接 id 污染。
-4. 只统计代理流量时，判断条件应基于 `chains` 且排除 `DIRECT` / `REJECT`，否则会把直连也算进去。
+3. 运行时重启、核心重启或配置切换时清空 active connection baseline，避免不同 core session 的连接 id 污染；不要监听每秒更新的 `runTimeProvider` 清基线，否则同一连接累计值会被每秒重复记入。
+4. 只统计代理流量时，判断条件应基于整条 `chains` 且排除任意 `DIRECT` / `REJECT*`，不能只看 `chains.last`；Clash 返回的最后一段可能是策略组名，直连标记可能在前面。
 5. JSONL 是后续分析接口，不是 UI 状态来源；UI 保持内存一小时滑窗，日志用于离线追溯。
 6. 代理组名称会变，保存的配置需要在 profile/group 变化后做 normalize，避免 UI 里仍指向旧 group name。
-7. app path 规则要用 regex escape，避免路径里的特殊字符破坏 Clash rule。
+7. 应用访问控制里的“默认”应始终理解为直连，不要从用户 profile 的 `MATCH` 或 fallback proxy group 继承代理目标；需要代理时必须显式给 App 选择代理组。
+8. 启用应用访问控制时，显式 App 规则后必须补 `MATCH,DIRECT` 截断订阅原有规则；否则默认直连的 App 仍可能命中订阅里的 `GEOSITE,...,代理组` 或 `MATCH,代理组`，看起来像流量统计误收了直连 App，实际是这些 App 被配置代理了。
+9. app path 规则要用 regex escape，避免路径里的特殊字符破坏 Clash rule。
 
 ## 验证命令
 
@@ -126,4 +128,3 @@ shasum -a 256 dist/FlClash-0.8.94-macos-arm64.dmg > dist/FlClash-0.8.94-macos-ar
 5. 先做定向 analyze，再做 macOS build。
 6. 发版前用编译产物和安装 bundle 证明功能存在。
 7. release 资产发布后记录 tag、DMG、sha256 和工作区干净状态。
-
