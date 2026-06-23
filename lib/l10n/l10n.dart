@@ -1404,6 +1404,86 @@ class AppLocalizations {
     );
   }
 
+  /// `Traffic analysis`
+  String get trafficAnalysis {
+    return Intl.message(
+      'Traffic analysis',
+      name: 'trafficAnalysis',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Analyze proxied traffic usage in the last hour`
+  String get trafficAnalysisDesc {
+    return Intl.message(
+      'Analyze proxied traffic usage in the last hour',
+      name: 'trafficAnalysisDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `App`
+  String get trafficAnalysisByApp {
+    return Intl.message(
+      'App',
+      name: 'trafficAnalysisByApp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Destination`
+  String get trafficAnalysisByDestination {
+    return Intl.message(
+      'Destination',
+      name: 'trafficAnalysisByDestination',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Last hour`
+  String get trafficAnalysisLastHour {
+    return Intl.message(
+      'Last hour',
+      name: 'trafficAnalysisLastHour',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total`
+  String get trafficAnalysisTotal {
+    return Intl.message(
+      'Total',
+      name: 'trafficAnalysisTotal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reset`
+  String get trafficAnalysisReset {
+    return Intl.message(
+      'Reset',
+      name: 'trafficAnalysisReset',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Traffic log`
+  String get trafficAnalysisLogPath {
+    return Intl.message(
+      'Traffic log',
+      name: 'trafficAnalysisLogPath',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Intranet IP`
   String get intranetIP {
     return Intl.message('Intranet IP', name: 'intranetIP', desc: '', args: []);

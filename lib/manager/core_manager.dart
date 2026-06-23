@@ -81,6 +81,7 @@ class _CoreContainerState extends ConsumerState<CoreManager>
 
   @override
   void onRequest(TrackerInfo trackerInfo) async {
+    trafficAnalysisStore.recordCompletedRequest(trackerInfo);
     ref.read(requestsProvider.notifier).addRequest(trackerInfo);
     super.onRequest(trackerInfo);
   }

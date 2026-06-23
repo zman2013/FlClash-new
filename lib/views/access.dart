@@ -140,11 +140,23 @@ class _AccessViewState extends ConsumerState<AccessView> {
     ref.read(accessControlStateProvider.notifier).update((state) {
       final newSet = Set<String>.from(state.currentList)
         ..addOrRemove(packageName);
-      final nextState = state.copyWithNewList(newSet.toList());
+      final nextAppProxyMap = Map<String, String>.from(state.appProxyMap);
+      if (!newSet.contains(packageName)) {
+        nextAppProxyMap.remove(packageName);
+      }
+      final nextState = state
+          .copyWithNewList(newSet.toList())
+          .copyWith(appProxyMap: nextAppProxyMap);
       if (system.isMacOS) {
         return nextState.copyWith(enable: nextState.currentList.isNotEmpty);
       }
       return nextState;
+    });
+  }
+
+  void _handleProxyChanged(String packageName, String proxyName) {
+    ref.read(accessControlStateProvider.notifier).update((state) {
+      return state.copyWithAppProxy(packageName, proxyName);
     });
   }
 
@@ -328,6 +340,8 @@ class _AccessViewState extends ConsumerState<AccessView> {
   Widget _buildContent({
     required List<Package> packages,
     required List<String> valueList,
+    required Map<String, String> appProxyMap,
+    required List<String> proxyOptions,
   }) {
     return FutureBuilder(
       future: _completer.future,
@@ -349,8 +363,13 @@ class _AccessViewState extends ConsumerState<AccessView> {
                       key: Key(package.packageName),
                       package: package,
                       value: valueList.contains(package.packageName),
+                      proxyName: appProxyMap[package.packageName] ?? '',
+                      proxyOptions: proxyOptions,
                       onChanged: (value) {
                         _handleSelected(package.packageName);
+                      },
+                      onProxyChanged: (value) {
+                        _handleProxyChanged(package.packageName, value);
                       },
                     );
                   },
@@ -397,11 +416,23 @@ class _AccessViewState extends ConsumerState<AccessView> {
     _pinedList = null;
   }
 
+  List<String> _getProxyOptions(List<Group> groups) {
+    final names = <String>{RuleTarget.DIRECT.name};
+    for (final group in groups) {
+      if (group.hidden == true || group.name.isEmpty) {
+        continue;
+      }
+      names.add(group.name);
+    }
+    return names.toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(loadingProvider(LoadingTag.access));
     final query = ref.watch(queryProvider(QueryTag.access));
     final packages = ref.watch(packagesProvider);
+    final groups = ref.watch(groupsProvider);
     final accessControl = ref.watch(accessControlStateProvider);
     if (_isInit) {
       if (_lastMode != accessControl.mode) {
@@ -428,6 +459,7 @@ class _AccessViewState extends ConsumerState<AccessView> {
     final currentList = accessControl.currentList;
     final viewPackageNameList = viewPackages.map((e) => e.packageName).toList();
     final valueList = currentList.intersection(viewPackageNameList);
+    final proxyOptions = _getProxyOptions(groups);
     return CommonScaffold(
       key: _scaffoldKey,
       isLoading: isLoading,
@@ -445,6 +477,8 @@ class _AccessViewState extends ConsumerState<AccessView> {
               child: _buildContent(
                 packages: viewPackages,
                 valueList: valueList,
+                appProxyMap: accessControl.appProxyMap,
+                proxyOptions: proxyOptions,
               ),
             ),
           ],
@@ -461,18 +495,43 @@ class _AccessViewState extends ConsumerState<AccessView> {
 class PackageListItem extends StatelessWidget {
   final Package package;
   final bool value;
+  final String proxyName;
+  final List<String> proxyOptions;
   final void Function(bool?) onChanged;
+  final void Function(String proxyName) onProxyChanged;
 
   const PackageListItem({
     super.key,
     required this.package,
     required this.value,
+    required this.proxyName,
+    required this.proxyOptions,
     required this.onChanged,
+    required this.onProxyChanged,
   });
+
+  Future<void> _handleSelectProxy(BuildContext context) async {
+    final value = await globalState.showCommonDialog<String>(
+      child: OptionsDialog<String>(
+        title: appLocalizations.proxyGroup,
+        options: ['', ...proxyOptions],
+        textBuilder: (value) =>
+            value.isEmpty ? appLocalizations.defaultText : value,
+        value: proxyName,
+      ),
+    );
+    if (value == null) {
+      return;
+    }
+    onProxyChanged(value);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ListItem.checkbox(
+    final proxyText = proxyName.isEmpty
+        ? appLocalizations.defaultText
+        : proxyName;
+    return ListItem(
       leading: SizedBox(
         width: 48,
         height: 48,
@@ -502,7 +561,28 @@ class PackageListItem extends StatelessWidget {
         style: const TextStyle(overflow: TextOverflow.ellipsis),
         maxLines: 1,
       ),
-      delegate: CheckboxDelegate(value: value, onChanged: onChanged),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 140),
+            child: TextButton(
+              onPressed: () {
+                _handleSelectProxy(context);
+              },
+              child: Text(
+                proxyText,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+          CommonCheckBox(value: value, onChanged: onChanged),
+        ],
+      ),
+      onTap: () {
+        onChanged(!value);
+      },
     );
   }
 }

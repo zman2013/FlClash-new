@@ -67,7 +67,7 @@ abstract class AppSettingProps with _$AppSettingProps {
     @Default(defaultDashboardWidgets)
     @JsonKey(fromJson: dashboardWidgetsSafeFormJson)
     List<DashboardWidget> dashboardWidgets,
-    @Default(false) bool onlyStatisticsProxy,
+    @Default(true) bool onlyStatisticsProxy,
     @Default(false) bool autoLaunch,
     @Default(false) bool silentLaunch,
     @Default(false) bool autoRun,
@@ -104,6 +104,7 @@ abstract class AccessControlProps with _$AccessControlProps {
     @Default(AccessControlMode.rejectSelected) AccessControlMode mode,
     @Default([]) List<String> acceptList,
     @Default([]) List<String> rejectList,
+    @Default({}) Map<String, String> appProxyMap,
     @Default(AccessSortType.none) AccessSortType sort,
     @Default(true) bool isFilterSystemApp,
     @Default(true) bool isFilterNonInternetApp,
@@ -120,9 +121,49 @@ extension AccessControlPropsExt on AccessControlProps {
   };
 
   AccessControlProps copyWithNewList(List<String> value) => switch (mode) {
-    AccessControlMode.acceptSelected => copyWith(acceptList: value),
-    AccessControlMode.rejectSelected => copyWith(rejectList: value),
+    AccessControlMode.acceptSelected => copyWith(
+      acceptList: value,
+      appProxyMap: _filterAppProxyMap(value),
+    ),
+    AccessControlMode.rejectSelected => copyWith(
+      rejectList: value,
+      appProxyMap: _filterAppProxyMap(value),
+    ),
   };
+
+  String getAppProxy(String appPath) => appProxyMap[appPath] ?? '';
+
+  AccessControlProps copyWithAppProxy(String appPath, String proxyName) {
+    final nextAppProxyMap = Map<String, String>.from(appProxyMap);
+    final target = proxyName.trim();
+    if (target.isEmpty) {
+      nextAppProxyMap.remove(appPath);
+    } else {
+      nextAppProxyMap[appPath] = target;
+    }
+    final nextList = Set<String>.from(currentList)..add(appPath);
+    return copyWith(
+      acceptList: mode == AccessControlMode.acceptSelected
+          ? nextList.toList()
+          : acceptList,
+      rejectList: mode == AccessControlMode.rejectSelected
+          ? nextList.toList()
+          : rejectList,
+      appProxyMap: Map<String, String>.fromEntries(
+        nextAppProxyMap.entries.where((entry) => nextList.contains(entry.key)),
+      ),
+      enable: system.isMacOS ? true : enable,
+    );
+  }
+
+  Map<String, String> _filterAppProxyMap(Iterable<String> appPaths) {
+    final appPathSet = appPaths.toSet();
+    return Map<String, String>.fromEntries(
+      appProxyMap.entries.where((entry) {
+        return appPathSet.contains(entry.key) && entry.value.trim().isNotEmpty;
+      }),
+    );
+  }
 }
 
 @freezed

@@ -12,7 +12,7 @@ _AppSettingProps _$AppSettingPropsFromJson(Map<String, dynamic> json) =>
       dashboardWidgets: json['dashboardWidgets'] == null
           ? defaultDashboardWidgets
           : dashboardWidgetsSafeFormJson(json['dashboardWidgets'] as List?),
-      onlyStatisticsProxy: json['onlyStatisticsProxy'] as bool? ?? false,
+      onlyStatisticsProxy: json['onlyStatisticsProxy'] as bool? ?? true,
       autoLaunch: json['autoLaunch'] as bool? ?? false,
       silentLaunch: json['silentLaunch'] as bool? ?? false,
       autoRun: json['autoRun'] as bool? ?? false,
@@ -97,6 +97,11 @@ _AccessControlProps _$AccessControlPropsFromJson(Map<String, dynamic> json) =>
               ?.map((e) => e as String)
               .toList() ??
           const [],
+      appProxyMap:
+          (json['appProxyMap'] as Map<String, dynamic>?)?.map(
+            (k, e) => MapEntry(k, e as String),
+          ) ??
+          const {},
       sort:
           $enumDecodeNullable(_$AccessSortTypeEnumMap, json['sort']) ??
           AccessSortType.none,
@@ -110,6 +115,7 @@ Map<String, dynamic> _$AccessControlPropsToJson(_AccessControlProps instance) =>
       'mode': _$AccessControlModeEnumMap[instance.mode]!,
       'acceptList': instance.acceptList,
       'rejectList': instance.rejectList,
+      'appProxyMap': instance.appProxyMap,
       'sort': _$AccessSortTypeEnumMap[instance.sort]!,
       'isFilterSystemApp': instance.isFilterSystemApp,
       'isFilterNonInternetApp': instance.isFilterNonInternetApp,

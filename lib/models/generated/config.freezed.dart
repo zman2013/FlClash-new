@@ -228,7 +228,7 @@ return $default(_that.locale,_that.dashboardWidgets,_that.onlyStatisticsProxy,_t
 @JsonSerializable()
 
 class _AppSettingProps implements AppSettingProps {
-  const _AppSettingProps({this.locale, @JsonKey(fromJson: dashboardWidgetsSafeFormJson) final  List<DashboardWidget> dashboardWidgets = defaultDashboardWidgets, this.onlyStatisticsProxy = false, this.autoLaunch = false, this.silentLaunch = false, this.autoRun = false, this.openLogs = false, this.closeConnections = true, this.testUrl = defaultTestUrl, this.isAnimateToPage = true, this.autoCheckUpdate = true, this.showLabel = false, this.disclaimerAccepted = false, this.crashlyticsTip = false, this.crashlytics = false, this.minimizeOnExit = true, this.hidden = false, this.developerMode = false, this.restoreStrategy = RestoreStrategy.compatible, this.showTrayTitle = true}): _dashboardWidgets = dashboardWidgets;
+  const _AppSettingProps({this.locale, @JsonKey(fromJson: dashboardWidgetsSafeFormJson) final  List<DashboardWidget> dashboardWidgets = defaultDashboardWidgets, this.onlyStatisticsProxy = true, this.autoLaunch = false, this.silentLaunch = false, this.autoRun = false, this.openLogs = false, this.closeConnections = true, this.testUrl = defaultTestUrl, this.isAnimateToPage = true, this.autoCheckUpdate = true, this.showLabel = false, this.disclaimerAccepted = false, this.crashlyticsTip = false, this.crashlytics = false, this.minimizeOnExit = true, this.hidden = false, this.developerMode = false, this.restoreStrategy = RestoreStrategy.compatible, this.showTrayTitle = true}): _dashboardWidgets = dashboardWidgets;
   factory _AppSettingProps.fromJson(Map<String, dynamic> json) => _$AppSettingPropsFromJson(json);
 
 @override final  String? locale;
@@ -341,7 +341,7 @@ as bool,
 /// @nodoc
 mixin _$AccessControlProps {
 
- bool get enable; AccessControlMode get mode; List<String> get acceptList; List<String> get rejectList; AccessSortType get sort; bool get isFilterSystemApp; bool get isFilterNonInternetApp;
+ bool get enable; AccessControlMode get mode; List<String> get acceptList; List<String> get rejectList; Map<String, String> get appProxyMap; AccessSortType get sort; bool get isFilterSystemApp; bool get isFilterNonInternetApp;
 /// Create a copy of AccessControlProps
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -354,16 +354,16 @@ $AccessControlPropsCopyWith<AccessControlProps> get copyWith => _$AccessControlP
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccessControlProps&&(identical(other.enable, enable) || other.enable == enable)&&(identical(other.mode, mode) || other.mode == mode)&&const DeepCollectionEquality().equals(other.acceptList, acceptList)&&const DeepCollectionEquality().equals(other.rejectList, rejectList)&&(identical(other.sort, sort) || other.sort == sort)&&(identical(other.isFilterSystemApp, isFilterSystemApp) || other.isFilterSystemApp == isFilterSystemApp)&&(identical(other.isFilterNonInternetApp, isFilterNonInternetApp) || other.isFilterNonInternetApp == isFilterNonInternetApp));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccessControlProps&&(identical(other.enable, enable) || other.enable == enable)&&(identical(other.mode, mode) || other.mode == mode)&&const DeepCollectionEquality().equals(other.acceptList, acceptList)&&const DeepCollectionEquality().equals(other.rejectList, rejectList)&&const DeepCollectionEquality().equals(other.appProxyMap, appProxyMap)&&(identical(other.sort, sort) || other.sort == sort)&&(identical(other.isFilterSystemApp, isFilterSystemApp) || other.isFilterSystemApp == isFilterSystemApp)&&(identical(other.isFilterNonInternetApp, isFilterNonInternetApp) || other.isFilterNonInternetApp == isFilterNonInternetApp));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,enable,mode,const DeepCollectionEquality().hash(acceptList),const DeepCollectionEquality().hash(rejectList),sort,isFilterSystemApp,isFilterNonInternetApp);
+int get hashCode => Object.hash(runtimeType,enable,mode,const DeepCollectionEquality().hash(acceptList),const DeepCollectionEquality().hash(rejectList),const DeepCollectionEquality().hash(appProxyMap),sort,isFilterSystemApp,isFilterNonInternetApp);
 
 @override
 String toString() {
-  return 'AccessControlProps(enable: $enable, mode: $mode, acceptList: $acceptList, rejectList: $rejectList, sort: $sort, isFilterSystemApp: $isFilterSystemApp, isFilterNonInternetApp: $isFilterNonInternetApp)';
+  return 'AccessControlProps(enable: $enable, mode: $mode, acceptList: $acceptList, rejectList: $rejectList, appProxyMap: $appProxyMap, sort: $sort, isFilterSystemApp: $isFilterSystemApp, isFilterNonInternetApp: $isFilterNonInternetApp)';
 }
 
 
@@ -374,7 +374,7 @@ abstract mixin class $AccessControlPropsCopyWith<$Res>  {
   factory $AccessControlPropsCopyWith(AccessControlProps value, $Res Function(AccessControlProps) _then) = _$AccessControlPropsCopyWithImpl;
 @useResult
 $Res call({
- bool enable, AccessControlMode mode, List<String> acceptList, List<String> rejectList, AccessSortType sort, bool isFilterSystemApp, bool isFilterNonInternetApp
+ bool enable, AccessControlMode mode, List<String> acceptList, List<String> rejectList, Map<String, String> appProxyMap, AccessSortType sort, bool isFilterSystemApp, bool isFilterNonInternetApp
 });
 
 
@@ -391,13 +391,14 @@ class _$AccessControlPropsCopyWithImpl<$Res>
 
 /// Create a copy of AccessControlProps
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? enable = null,Object? mode = null,Object? acceptList = null,Object? rejectList = null,Object? sort = null,Object? isFilterSystemApp = null,Object? isFilterNonInternetApp = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? enable = null,Object? mode = null,Object? acceptList = null,Object? rejectList = null,Object? appProxyMap = null,Object? sort = null,Object? isFilterSystemApp = null,Object? isFilterNonInternetApp = null,}) {
   return _then(_self.copyWith(
 enable: null == enable ? _self.enable : enable // ignore: cast_nullable_to_non_nullable
 as bool,mode: null == mode ? _self.mode : mode // ignore: cast_nullable_to_non_nullable
 as AccessControlMode,acceptList: null == acceptList ? _self.acceptList : acceptList // ignore: cast_nullable_to_non_nullable
 as List<String>,rejectList: null == rejectList ? _self.rejectList : rejectList // ignore: cast_nullable_to_non_nullable
-as List<String>,sort: null == sort ? _self.sort : sort // ignore: cast_nullable_to_non_nullable
+as List<String>,appProxyMap: null == appProxyMap ? _self.appProxyMap : appProxyMap // ignore: cast_nullable_to_non_nullable
+as Map<String, String>,sort: null == sort ? _self.sort : sort // ignore: cast_nullable_to_non_nullable
 as AccessSortType,isFilterSystemApp: null == isFilterSystemApp ? _self.isFilterSystemApp : isFilterSystemApp // ignore: cast_nullable_to_non_nullable
 as bool,isFilterNonInternetApp: null == isFilterNonInternetApp ? _self.isFilterNonInternetApp : isFilterNonInternetApp // ignore: cast_nullable_to_non_nullable
 as bool,
@@ -485,10 +486,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool enable,  AccessControlMode mode,  List<String> acceptList,  List<String> rejectList,  AccessSortType sort,  bool isFilterSystemApp,  bool isFilterNonInternetApp)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool enable,  AccessControlMode mode,  List<String> acceptList,  List<String> rejectList,  Map<String, String> appProxyMap,  AccessSortType sort,  bool isFilterSystemApp,  bool isFilterNonInternetApp)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AccessControlProps() when $default != null:
-return $default(_that.enable,_that.mode,_that.acceptList,_that.rejectList,_that.sort,_that.isFilterSystemApp,_that.isFilterNonInternetApp);case _:
+return $default(_that.enable,_that.mode,_that.acceptList,_that.rejectList,_that.appProxyMap,_that.sort,_that.isFilterSystemApp,_that.isFilterNonInternetApp);case _:
   return orElse();
 
 }
@@ -506,10 +507,10 @@ return $default(_that.enable,_that.mode,_that.acceptList,_that.rejectList,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool enable,  AccessControlMode mode,  List<String> acceptList,  List<String> rejectList,  AccessSortType sort,  bool isFilterSystemApp,  bool isFilterNonInternetApp)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool enable,  AccessControlMode mode,  List<String> acceptList,  List<String> rejectList,  Map<String, String> appProxyMap,  AccessSortType sort,  bool isFilterSystemApp,  bool isFilterNonInternetApp)  $default,) {final _that = this;
 switch (_that) {
 case _AccessControlProps():
-return $default(_that.enable,_that.mode,_that.acceptList,_that.rejectList,_that.sort,_that.isFilterSystemApp,_that.isFilterNonInternetApp);case _:
+return $default(_that.enable,_that.mode,_that.acceptList,_that.rejectList,_that.appProxyMap,_that.sort,_that.isFilterSystemApp,_that.isFilterNonInternetApp);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -526,10 +527,10 @@ return $default(_that.enable,_that.mode,_that.acceptList,_that.rejectList,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool enable,  AccessControlMode mode,  List<String> acceptList,  List<String> rejectList,  AccessSortType sort,  bool isFilterSystemApp,  bool isFilterNonInternetApp)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool enable,  AccessControlMode mode,  List<String> acceptList,  List<String> rejectList,  Map<String, String> appProxyMap,  AccessSortType sort,  bool isFilterSystemApp,  bool isFilterNonInternetApp)?  $default,) {final _that = this;
 switch (_that) {
 case _AccessControlProps() when $default != null:
-return $default(_that.enable,_that.mode,_that.acceptList,_that.rejectList,_that.sort,_that.isFilterSystemApp,_that.isFilterNonInternetApp);case _:
+return $default(_that.enable,_that.mode,_that.acceptList,_that.rejectList,_that.appProxyMap,_that.sort,_that.isFilterSystemApp,_that.isFilterNonInternetApp);case _:
   return null;
 
 }
@@ -541,7 +542,7 @@ return $default(_that.enable,_that.mode,_that.acceptList,_that.rejectList,_that.
 @JsonSerializable()
 
 class _AccessControlProps implements AccessControlProps {
-  const _AccessControlProps({this.enable = false, this.mode = AccessControlMode.rejectSelected, final  List<String> acceptList = const [], final  List<String> rejectList = const [], this.sort = AccessSortType.none, this.isFilterSystemApp = true, this.isFilterNonInternetApp = true}): _acceptList = acceptList,_rejectList = rejectList;
+  const _AccessControlProps({this.enable = false, this.mode = AccessControlMode.rejectSelected, final  List<String> acceptList = const [], final  List<String> rejectList = const [], final  Map<String, String> appProxyMap = const {}, this.sort = AccessSortType.none, this.isFilterSystemApp = true, this.isFilterNonInternetApp = true}): _acceptList = acceptList,_rejectList = rejectList,_appProxyMap = appProxyMap;
   factory _AccessControlProps.fromJson(Map<String, dynamic> json) => _$AccessControlPropsFromJson(json);
 
 @override@JsonKey() final  bool enable;
@@ -558,6 +559,13 @@ class _AccessControlProps implements AccessControlProps {
   if (_rejectList is EqualUnmodifiableListView) return _rejectList;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_rejectList);
+}
+
+ final  Map<String, String> _appProxyMap;
+@override@JsonKey() Map<String, String> get appProxyMap {
+  if (_appProxyMap is EqualUnmodifiableMapView) return _appProxyMap;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_appProxyMap);
 }
 
 @override@JsonKey() final  AccessSortType sort;
@@ -577,16 +585,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccessControlProps&&(identical(other.enable, enable) || other.enable == enable)&&(identical(other.mode, mode) || other.mode == mode)&&const DeepCollectionEquality().equals(other._acceptList, _acceptList)&&const DeepCollectionEquality().equals(other._rejectList, _rejectList)&&(identical(other.sort, sort) || other.sort == sort)&&(identical(other.isFilterSystemApp, isFilterSystemApp) || other.isFilterSystemApp == isFilterSystemApp)&&(identical(other.isFilterNonInternetApp, isFilterNonInternetApp) || other.isFilterNonInternetApp == isFilterNonInternetApp));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccessControlProps&&(identical(other.enable, enable) || other.enable == enable)&&(identical(other.mode, mode) || other.mode == mode)&&const DeepCollectionEquality().equals(other._acceptList, _acceptList)&&const DeepCollectionEquality().equals(other._rejectList, _rejectList)&&const DeepCollectionEquality().equals(other._appProxyMap, _appProxyMap)&&(identical(other.sort, sort) || other.sort == sort)&&(identical(other.isFilterSystemApp, isFilterSystemApp) || other.isFilterSystemApp == isFilterSystemApp)&&(identical(other.isFilterNonInternetApp, isFilterNonInternetApp) || other.isFilterNonInternetApp == isFilterNonInternetApp));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,enable,mode,const DeepCollectionEquality().hash(_acceptList),const DeepCollectionEquality().hash(_rejectList),sort,isFilterSystemApp,isFilterNonInternetApp);
+int get hashCode => Object.hash(runtimeType,enable,mode,const DeepCollectionEquality().hash(_acceptList),const DeepCollectionEquality().hash(_rejectList),const DeepCollectionEquality().hash(_appProxyMap),sort,isFilterSystemApp,isFilterNonInternetApp);
 
 @override
 String toString() {
-  return 'AccessControlProps(enable: $enable, mode: $mode, acceptList: $acceptList, rejectList: $rejectList, sort: $sort, isFilterSystemApp: $isFilterSystemApp, isFilterNonInternetApp: $isFilterNonInternetApp)';
+  return 'AccessControlProps(enable: $enable, mode: $mode, acceptList: $acceptList, rejectList: $rejectList, appProxyMap: $appProxyMap, sort: $sort, isFilterSystemApp: $isFilterSystemApp, isFilterNonInternetApp: $isFilterNonInternetApp)';
 }
 
 
@@ -597,7 +605,7 @@ abstract mixin class _$AccessControlPropsCopyWith<$Res> implements $AccessContro
   factory _$AccessControlPropsCopyWith(_AccessControlProps value, $Res Function(_AccessControlProps) _then) = __$AccessControlPropsCopyWithImpl;
 @override @useResult
 $Res call({
- bool enable, AccessControlMode mode, List<String> acceptList, List<String> rejectList, AccessSortType sort, bool isFilterSystemApp, bool isFilterNonInternetApp
+ bool enable, AccessControlMode mode, List<String> acceptList, List<String> rejectList, Map<String, String> appProxyMap, AccessSortType sort, bool isFilterSystemApp, bool isFilterNonInternetApp
 });
 
 
@@ -614,13 +622,14 @@ class __$AccessControlPropsCopyWithImpl<$Res>
 
 /// Create a copy of AccessControlProps
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? enable = null,Object? mode = null,Object? acceptList = null,Object? rejectList = null,Object? sort = null,Object? isFilterSystemApp = null,Object? isFilterNonInternetApp = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? enable = null,Object? mode = null,Object? acceptList = null,Object? rejectList = null,Object? appProxyMap = null,Object? sort = null,Object? isFilterSystemApp = null,Object? isFilterNonInternetApp = null,}) {
   return _then(_AccessControlProps(
 enable: null == enable ? _self.enable : enable // ignore: cast_nullable_to_non_nullable
 as bool,mode: null == mode ? _self.mode : mode // ignore: cast_nullable_to_non_nullable
 as AccessControlMode,acceptList: null == acceptList ? _self._acceptList : acceptList // ignore: cast_nullable_to_non_nullable
 as List<String>,rejectList: null == rejectList ? _self._rejectList : rejectList // ignore: cast_nullable_to_non_nullable
-as List<String>,sort: null == sort ? _self.sort : sort // ignore: cast_nullable_to_non_nullable
+as List<String>,appProxyMap: null == appProxyMap ? _self._appProxyMap : appProxyMap // ignore: cast_nullable_to_non_nullable
+as Map<String, String>,sort: null == sort ? _self.sort : sort // ignore: cast_nullable_to_non_nullable
 as AccessSortType,isFilterSystemApp: null == isFilterSystemApp ? _self.isFilterSystemApp : isFilterSystemApp // ignore: cast_nullable_to_non_nullable
 as bool,isFilterNonInternetApp: null == isFilterNonInternetApp ? _self.isFilterNonInternetApp : isFilterNonInternetApp // ignore: cast_nullable_to_non_nullable
 as bool,

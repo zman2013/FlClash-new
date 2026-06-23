@@ -932,6 +932,17 @@ extension SetupControllerExt on AppController {
         items: normalizedItems,
       );
     }
+    final vpnProps = _ref.read(vpnSettingProvider);
+    final normalizedAccessControlProps = normalizeAccessControlProxyMap(
+      vpnProps.accessControlProps,
+      groupNames,
+    );
+    if (normalizedAccessControlProps.appProxyMap.toString() !=
+        vpnProps.accessControlProps.appProxyMap.toString()) {
+      _ref.read(vpnSettingProvider.notifier).value = vpnProps.copyWith(
+        accessControlProps: normalizedAccessControlProps,
+      );
+    }
   }
 }
 

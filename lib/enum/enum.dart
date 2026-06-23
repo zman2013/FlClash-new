@@ -332,6 +332,7 @@ enum PageLabel {
   requests,
   resources,
   connections,
+  trafficAnalysis,
 }
 
 enum RuleAction {
