@@ -78,4 +78,9 @@ afterEvaluate {
     tasks.named("preBuild") {
         dependsOn(copyNativeLibs)
     }
+    tasks.matching {
+        it.name.startsWith("configureCMake") || it.name.startsWith("externalNativeBuild")
+    }.configureEach {
+        dependsOn(copyNativeLibs)
+    }
 }
