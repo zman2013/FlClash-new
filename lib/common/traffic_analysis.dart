@@ -15,6 +15,7 @@ class TrafficAnalysisStore extends ValueNotifier<TrafficAnalysisSnapshot> {
   final _records = Queue<TrafficAnalysisRecord>();
   final _lastTotals = <String, _ConnectionTraffic>{};
   final _logWriter = TrafficAnalysisLogWriter();
+  Map<String, String> _appLabels = {};
   DateTime _startedAt;
 
   TrafficAnalysisStore()
@@ -22,6 +23,10 @@ class TrafficAnalysisStore extends ValueNotifier<TrafficAnalysisSnapshot> {
       super(TrafficAnalysisSnapshot.empty(DateTime.now()));
 
   Future<String> get logPath => appPath.trafficAnalysisLogPath;
+
+  void setAppLabels(Map<String, String> appLabels) {
+    _appLabels = appLabels;
+  }
 
   void recordActiveConnections(List<TrackerInfo> connections) {
     final now = DateTime.now();
@@ -173,6 +178,24 @@ class TrafficAnalysisStore extends ValueNotifier<TrafficAnalysisSnapshot> {
     items.sort((a, b) => b.total.compareTo(a.total));
     return items;
   }
+
+  String _appNameOf(TrackerInfo trackerInfo) {
+    final process = trackerInfo.metadata.process.trim();
+    if (process.isNotEmpty) {
+      final label = _appLabels[process]?.trim();
+      if (label?.isNotEmpty == true) {
+        return label!;
+      }
+      return process;
+    }
+
+    final processPath = trackerInfo.metadata.processPath.trim();
+    if (processPath.isNotEmpty) {
+      return processPath.split('/').where((part) => part.isNotEmpty).last;
+    }
+
+    return 'Unknown App';
+  }
 }
 
 class TrafficAnalysisLogWriter {
@@ -229,20 +252,6 @@ bool _isProxied(TrackerInfo trackerInfo) {
   }
   final outbound = trackerInfo.chains.last.toUpperCase();
   return outbound != 'DIRECT' && !outbound.startsWith('REJECT');
-}
-
-String _appNameOf(TrackerInfo trackerInfo) {
-  final process = trackerInfo.metadata.process.trim();
-  if (process.isNotEmpty) {
-    return process;
-  }
-
-  final processPath = trackerInfo.metadata.processPath.trim();
-  if (processPath.isNotEmpty) {
-    return processPath.split('/').where((part) => part.isNotEmpty).last;
-  }
-
-  return 'Unknown App';
 }
 
 String _destinationOf(TrackerInfo trackerInfo) {

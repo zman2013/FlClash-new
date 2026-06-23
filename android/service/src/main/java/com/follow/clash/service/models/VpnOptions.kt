@@ -11,6 +11,7 @@ data class AccessControlProps(
     val mode: AccessControlMode,
     val acceptList: List<String>,
     val rejectList: List<String>,
+    val appProxyMap: Map<String, String> = emptyMap(),
 ) : Parcelable
 
 @Parcelize

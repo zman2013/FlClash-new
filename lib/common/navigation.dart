@@ -34,14 +34,16 @@ class Navigation {
         builder: (_) =>
             const ProfilesView(key: GlobalObjectKey(PageLabel.profiles)),
       ),
-      if (system.isMacOS)
+      if (system.isMacOS || system.isAndroid)
         NavigationItem(
           icon: const Icon(Icons.view_list),
           label: PageLabel.accessControl,
           description: 'accessControlDesc',
           builder: (_) =>
               const AccessView(key: GlobalObjectKey(PageLabel.accessControl)),
-          modes: [NavigationItemMode.desktop],
+          modes: system.isAndroid
+              ? [NavigationItemMode.mobile]
+              : [NavigationItemMode.desktop],
         ),
       NavigationItem(
         icon: const Icon(Icons.language),
@@ -66,7 +68,7 @@ class Navigation {
         description: 'connectionsDesc',
         modes: [NavigationItemMode.desktop, NavigationItemMode.more],
       ),
-      if (system.isMacOS)
+      if (system.isMacOS || system.isAndroid)
         NavigationItem(
           icon: const Icon(Icons.query_stats),
           label: PageLabel.trafficAnalysis,
@@ -74,7 +76,9 @@ class Navigation {
             key: GlobalObjectKey(PageLabel.trafficAnalysis),
           ),
           description: 'trafficAnalysisDesc',
-          modes: [NavigationItemMode.desktop, NavigationItemMode.more],
+          modes: system.isAndroid
+              ? [NavigationItemMode.more]
+              : [NavigationItemMode.desktop, NavigationItemMode.more],
         ),
       NavigationItem(
         icon: Icon(Icons.storage),

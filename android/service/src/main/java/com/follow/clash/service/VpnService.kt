@@ -197,7 +197,10 @@ class VpnService : SystemVpnService(), IBaseService,
                         }
 
                         AccessControlMode.REJECT_SELECTED -> {
-                            (accessControl.rejectList - packageName).forEach {
+                            val proxiedPackages = accessControl.appProxyMap
+                                .filterValues { it.isNotBlank() }
+                                .keys
+                            (accessControl.rejectList - packageName - proxiedPackages).forEach {
                                 addDisallowedApplication(it)
                             }
                         }
