@@ -774,20 +774,20 @@ class AppLocalizations {
     );
   }
 
-  /// `Blacklist mode`
+  /// `Bypass selected mode`
   String get blacklistMode {
     return Intl.message(
-      'Blacklist mode',
+      'Bypass selected mode',
       name: 'blacklistMode',
       desc: '',
       args: [],
     );
   }
 
-  /// `Whitelist mode`
+  /// `Explicit proxy mode`
   String get whitelistMode {
     return Intl.message(
-      'Whitelist mode',
+      'Explicit proxy mode',
       name: 'whitelistMode',
       desc: '',
       args: [],
@@ -839,20 +839,20 @@ class AppLocalizations {
     );
   }
 
-  /// `Only allow selected apps to use proxy`
+  /// `Only apps with an explicit proxy group use proxy; other apps use DIRECT`
   String get accessControlAllowDesc {
     return Intl.message(
-      'Only allow selected apps to use proxy',
+      'Only apps with an explicit proxy group use proxy; other apps use DIRECT',
       name: 'accessControlAllowDesc',
       desc: '',
       args: [],
     );
   }
 
-  /// `Selected apps will bypass proxy`
+  /// `Selected apps without a proxy bypass VPN; explicit proxy apps use that proxy; other apps use DIRECT`
   String get accessControlNotAllowDesc {
     return Intl.message(
-      'Selected apps will bypass proxy',
+      'Selected apps without a proxy bypass VPN; explicit proxy apps use that proxy; other apps use DIRECT',
       name: 'accessControlNotAllowDesc',
       desc: '',
       args: [],

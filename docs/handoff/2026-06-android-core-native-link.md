@@ -170,12 +170,14 @@ VPN 验证：
 ## 应用访问控制语义
 
 - Android 规则使用 `PROCESS-NAME,<package>,<target>`，不是 macOS 的进程路径正则。
+- 当前产品语义不是传统“黑名单/白名单”：只有用户显式选择了代理组的 App 才走该代理，其它 App 都应直连。
 - 应用访问控制里每个 App 的“默认”表示没有显式 per-app proxy，语义固定为 `DIRECT`。
 - 只有用户为某个 App 选择了具体代理组时，`appProxyMap` 才保存该 package，规则目标才会变成该代理组。
 - `acceptSelected` 模式下，选中的 App 默认也应直连；需要走代理必须显式选代理组。尾部仍补 `MATCH,DIRECT`。
 - `rejectSelected` 模式下，选中的 App 默认直连；如果选了代理组，Android VPN 侧不能把它加入 disallowed list，否则代理规则不会生效。
 - 启用应用访问控制后，显式 App 规则后必须立刻补 `MATCH,DIRECT`。否则未显式配置代理组的 App 会继续命中订阅配置里的 `GEOSITE,...,🔰节点选择` 或末尾 `MATCH,🔰节点选择`，实际仍在走代理。
 - UI 不应把空代理目标显示成“默认”，这会让用户误以为会跟随订阅的 `MATCH` 目标；应显示成 `DIRECT`。
+- 因为上述语义，不能按旧 blacklist 预期删除 `MATCH,DIRECT`。那会让未显式选择代理组的 App 重新落入订阅规则，破坏“其它 App 都直连”。
 
 健康配置形态：
 

@@ -55,13 +55,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "about": MessageLookupByLibrary.simpleMessage("について"),
     "accessControl": MessageLookupByLibrary.simpleMessage("アクセス制御"),
     "accessControlAllowDesc": MessageLookupByLibrary.simpleMessage(
-      "選択したアプリのみプロキシを使用",
+      "明示的にプロキシグループを選択したアプリだけがプロキシを使用し、その他のアプリはDIRECTになります",
     ),
     "accessControlDesc": MessageLookupByLibrary.simpleMessage(
       "アプリケーションのプロキシアクセスを設定",
     ),
     "accessControlNotAllowDesc": MessageLookupByLibrary.simpleMessage(
-      "選択したアプリはプロキシをバイパス",
+      "プロキシ未選択の選択済みアプリはVPNをバイパスし、明示的に選択したアプリはそのプロキシを使用し、その他のアプリはDIRECTになります",
     ),
     "accessControlSettings": MessageLookupByLibrary.simpleMessage("アクセス制御設定"),
     "account": MessageLookupByLibrary.simpleMessage("アカウント"),
@@ -126,7 +126,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "basicConfig": MessageLookupByLibrary.simpleMessage("基本設定"),
     "basicConfigDesc": MessageLookupByLibrary.simpleMessage("基本設定をグローバルに変更"),
     "bind": MessageLookupByLibrary.simpleMessage("バインド"),
-    "blacklistMode": MessageLookupByLibrary.simpleMessage("ブラックリストモード"),
+    "blacklistMode": MessageLookupByLibrary.simpleMessage("選択アプリバイパスモード"),
     "bypassDomain": MessageLookupByLibrary.simpleMessage("バイパスドメイン"),
     "bypassDomainDesc": MessageLookupByLibrary.simpleMessage("システムプロキシ有効時のみ適用"),
     "cacheCorrupt": MessageLookupByLibrary.simpleMessage(
@@ -678,7 +678,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "vpnTip": MessageLookupByLibrary.simpleMessage("変更はVPN再起動後に有効"),
     "webDAVConfiguration": MessageLookupByLibrary.simpleMessage("WebDAV設定"),
-    "whitelistMode": MessageLookupByLibrary.simpleMessage("ホワイトリストモード"),
+    "whitelistMode": MessageLookupByLibrary.simpleMessage("明示的プロキシモード"),
     "years": MessageLookupByLibrary.simpleMessage("年"),
     "yearsAgo": m14,
     "zh_CN": MessageLookupByLibrary.simpleMessage("簡体字中国語"),

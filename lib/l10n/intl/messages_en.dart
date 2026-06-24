@@ -62,13 +62,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "about": MessageLookupByLibrary.simpleMessage("About"),
     "accessControl": MessageLookupByLibrary.simpleMessage("AccessControl"),
     "accessControlAllowDesc": MessageLookupByLibrary.simpleMessage(
-      "Only allow selected apps to use proxy",
+      "Only apps with an explicit proxy group use proxy; other apps use DIRECT",
     ),
     "accessControlDesc": MessageLookupByLibrary.simpleMessage(
       "Configure application access proxy",
     ),
     "accessControlNotAllowDesc": MessageLookupByLibrary.simpleMessage(
-      "Selected apps will bypass proxy",
+      "Selected apps without a proxy bypass VPN; explicit proxy apps use that proxy; other apps use DIRECT",
     ),
     "accessControlSettings": MessageLookupByLibrary.simpleMessage(
       "Access Control Settings",
@@ -177,7 +177,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Modify the basic configuration globally",
     ),
     "bind": MessageLookupByLibrary.simpleMessage("Bind"),
-    "blacklistMode": MessageLookupByLibrary.simpleMessage("Blacklist mode"),
+    "blacklistMode": MessageLookupByLibrary.simpleMessage(
+      "Bypass selected mode",
+    ),
     "bypassDomain": MessageLookupByLibrary.simpleMessage("Bypass domain"),
     "bypassDomainDesc": MessageLookupByLibrary.simpleMessage(
       "Only takes effect when the system proxy is enabled",
@@ -883,7 +885,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "webDAVConfiguration": MessageLookupByLibrary.simpleMessage(
       "WebDAV configuration",
     ),
-    "whitelistMode": MessageLookupByLibrary.simpleMessage("Whitelist mode"),
+    "whitelistMode": MessageLookupByLibrary.simpleMessage(
+      "Explicit proxy mode",
+    ),
     "years": MessageLookupByLibrary.simpleMessage("Years"),
     "yearsAgo": m14,
     "zh_CN": MessageLookupByLibrary.simpleMessage("Simplified Chinese"),
