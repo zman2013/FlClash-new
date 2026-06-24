@@ -61,13 +61,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "about": MessageLookupByLibrary.simpleMessage("О программе"),
     "accessControl": MessageLookupByLibrary.simpleMessage("Контроль доступа"),
     "accessControlAllowDesc": MessageLookupByLibrary.simpleMessage(
-      "Разрешить прокси только выбранным приложениям",
+      "Only apps with an explicit proxy group use proxy; other apps use DIRECT",
     ),
     "accessControlDesc": MessageLookupByLibrary.simpleMessage(
       "Настройка доступа приложений к прокси",
     ),
     "accessControlNotAllowDesc": MessageLookupByLibrary.simpleMessage(
-      "Выбранные приложения будут обходить прокси",
+      "Selected apps without a proxy bypass VPN; explicit proxy apps use that proxy; other apps use DIRECT",
     ),
     "accessControlSettings": MessageLookupByLibrary.simpleMessage(
       "Настройки контроля доступа",
@@ -177,7 +177,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "bind": MessageLookupByLibrary.simpleMessage("Привязать"),
     "blacklistMode": MessageLookupByLibrary.simpleMessage(
-      "Режим черного списка",
+      "Bypass selected mode",
     ),
     "bypassDomain": MessageLookupByLibrary.simpleMessage("Обход домена"),
     "bypassDomainDesc": MessageLookupByLibrary.simpleMessage(
@@ -935,7 +935,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Конфигурация WebDAV",
     ),
     "whitelistMode": MessageLookupByLibrary.simpleMessage(
-      "Режим белого списка",
+      "Explicit proxy mode",
     ),
     "years": MessageLookupByLibrary.simpleMessage("Лет"),
     "yearsAgo": m14,

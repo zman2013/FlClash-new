@@ -135,18 +135,8 @@ List<String> _buildAccessControlRules({
       .where((item) => item.isNotEmpty)
       .toSet()
       .toList();
-  if (accessControlProps.mode == AccessControlMode.rejectSelected) {
-    return [
-      for (final item in selectedAppPaths)
-        _buildProcessRule(
-          item,
-          accessControlProps.appProxyMap[item]?.trim().isNotEmpty == true
-              ? accessControlProps.appProxyMap[item]!.trim()
-              : RuleTarget.DIRECT.name,
-        ),
-      '${RuleAction.MATCH.value},${RuleTarget.DIRECT.name}',
-    ];
-  }
+  // Access control is explicit-proxy-only: unconfigured apps must not fall
+  // through to profile rules, where subscription MATCH rules may proxy them.
   return [
     for (final item in selectedAppPaths)
       _buildProcessRule(

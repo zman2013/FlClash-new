@@ -41,6 +41,7 @@ Tags: macOS, Flutter, Riverpod, Freezed, traffic_analysis.jsonl, app proxy, doma
 - 生成规则使用 `PROCESS_PATH_REGEX`，规则必须插到用户 profile rules 前面。
 - allow-selected 模式下，选中 app 只有指定了 per-app proxy 才走代理；未指定代理组时也生成 `DIRECT`，尾部补 `MATCH,DIRECT` 保持未选中 app 直连。
 - reject-selected 模式下，选中 app 默认 `DIRECT`，但如果配置了 per-app proxy，则走指定代理。
+- 当前产品语义下不要按传统黑名单理解应用访问控制：只有显式选择代理组的 app 走代理，其它 app 都应被 `MATCH,DIRECT` 截断为直连。
 
 配置与 UI：
 
