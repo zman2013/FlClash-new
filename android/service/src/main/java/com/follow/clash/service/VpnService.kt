@@ -191,16 +191,21 @@ class VpnService : SystemVpnService(), IBaseService,
                 if (accessControl.enable) {
                     when (accessControl.mode) {
                         AccessControlMode.ACCEPT_SELECTED -> {
-                            (accessControl.acceptList + packageName).forEach {
-                                addAllowedApplication(it)
-                            }
+                            (accessControl.acceptList + packageName + CHATGPT_DEPENDENCY_PACKAGES)
+                                .distinct()
+                                .filter(self::isPackageInstalled)
+                                .forEach {
+                                    addAllowedApplication(it)
+                                }
                         }
 
                         AccessControlMode.REJECT_SELECTED -> {
                             val proxiedPackages = accessControl.appProxyMap
                                 .filterValues { it.isNotBlank() }
                                 .keys
-                            (accessControl.rejectList - packageName - proxiedPackages).forEach {
+                            val disallowedPackages = accessControl.rejectList -
+                                packageName - proxiedPackages - CHATGPT_DEPENDENCY_PACKAGES.toSet()
+                            disallowedPackages.forEach {
                                 addDisallowedApplication(it)
                             }
                         }
@@ -253,7 +258,15 @@ class VpnService : SystemVpnService(), IBaseService,
         stopSelf()
     }
 
+    private fun isPackageInstalled(packageName: String): Boolean =
+        runCatching { packageManager.getApplicationInfo(packageName, 0) }.isSuccess
+
     companion object {
+        private val CHATGPT_DEPENDENCY_PACKAGES = listOf(
+            "com.google.android.gms",
+            "com.google.android.gsf",
+            "com.android.vending",
+        )
         private const val IPV4_ADDRESS = "172.19.0.1/30"
         private const val IPV6_ADDRESS = "fdfe:dcba:9876::1/126"
         private const val DNS = "172.19.0.2"

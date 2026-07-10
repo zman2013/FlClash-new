@@ -124,6 +124,13 @@ String _buildProcessRule(String appIdentifier, String target) {
   return _buildProcessPathRegexRule(appIdentifier, target);
 }
 
+const _chatGptPackageName = 'com.openai.chatgpt';
+const _chatGptAndroidDependencyPackages = [
+  'com.google.android.gms',
+  'com.google.android.gsf',
+  'com.android.vending',
+];
+
 List<String> _buildAccessControlRules({
   required AccessControlProps accessControlProps,
 }) {
@@ -135,16 +142,25 @@ List<String> _buildAccessControlRules({
       .where((item) => item.isNotEmpty)
       .toSet()
       .toList();
+  final appTargets = <String, String>{
+    for (final item in selectedAppPaths)
+      item: accessControlProps.appProxyMap[item]?.trim().isNotEmpty == true
+          ? accessControlProps.appProxyMap[item]!.trim()
+          : RuleTarget.DIRECT.name,
+  };
+  if (system.isAndroid) {
+    final chatGptTarget = appTargets[_chatGptPackageName];
+    if (chatGptTarget != null && chatGptTarget != RuleTarget.DIRECT.name) {
+      for (final packageName in _chatGptAndroidDependencyPackages) {
+        appTargets[packageName] = chatGptTarget;
+      }
+    }
+  }
   // Access control is explicit-proxy-only: unconfigured apps must not fall
   // through to profile rules, where subscription MATCH rules may proxy them.
   return [
-    for (final item in selectedAppPaths)
-      _buildProcessRule(
-        item,
-        accessControlProps.appProxyMap[item]?.trim().isNotEmpty == true
-            ? accessControlProps.appProxyMap[item]!.trim()
-            : RuleTarget.DIRECT.name,
-      ),
+    for (final entry in appTargets.entries)
+      _buildProcessRule(entry.key, entry.value),
     '${RuleAction.MATCH.value},${RuleTarget.DIRECT.name}',
   ];
 }
