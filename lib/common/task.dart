@@ -442,13 +442,16 @@ Future<Map<String, dynamic>> _makeRealProfileTask(
       finalAddedRules = addedRules.map((e) => e.value).toList();
     }
     rules = [
-      ...accessControlRules,
       ...domainRules,
+      ...accessControlRules,
       ...finalAddedRules,
       ...rules,
     ];
   } else if (domainRules.isNotEmpty || accessControlRules.isNotEmpty) {
-    rules = [...accessControlRules, ...domainRules, ...rules];
+    // Domain-specific routing is more precise than an app-wide process rule.
+    // Keep it first so DIRECT intranet exceptions still work for apps that are
+    // otherwise assigned to a proxy group by access control.
+    rules = [...domainRules, ...accessControlRules, ...rules];
   }
   rawConfig['rules'] = rules;
   return Map<String, dynamic>.from(rawConfig);

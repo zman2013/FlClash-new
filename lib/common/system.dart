@@ -328,6 +328,8 @@ final windows = system.isWindows ? Windows() : null;
 class MacOS {
   static MacOS? _instance;
 
+  static const managedDns = '223.5.5.5';
+
   List<String>? originDns;
 
   MacOS._internal();
@@ -364,13 +366,27 @@ class MacOS {
           (line) => RegExp(r'^\(\d+\).*').hasMatch(line),
           orElse: () => '',
         );
-    final currentServiceNameLineSplits = currentServiceNameLine.trim().split(
-      ' ',
-    );
-    if (currentServiceNameLineSplits.length < 2) {
-      return null;
-    }
-    return currentServiceNameLineSplits[1];
+    return parseNetworkServiceName(currentServiceNameLine);
+  }
+
+  static String? parseNetworkServiceName(String line) {
+    final match = RegExp(r'^\(\d+\)\s+(.+)$').firstMatch(line.trim());
+    final serviceName = match?.group(1)?.trim();
+    return serviceName?.isNotEmpty == true ? serviceName : null;
+  }
+
+  static bool isProxyEnabledOutput(String output) {
+    return RegExp(
+      r'^Enabled:\s*Yes$',
+      caseSensitive: false,
+      multiLine: true,
+    ).hasMatch(output);
+  }
+
+  static bool isDnsResetOutput(String output) {
+    final value = output.trim();
+    return value.startsWith("There aren't any DNS Servers set on") ||
+        value.startsWith('There are no DNS Servers set on');
   }
 
   Future<List<String>?> get systemDns async {
@@ -399,12 +415,15 @@ class MacOS {
     List<String>? nextDns;
     if (restore) {
       nextDns = originDns;
+      if (nextDns?.contains(managedDns) == true) {
+        nextDns = [];
+      }
     } else {
       final originDns = await systemDns;
       if (originDns == null) {
         return;
       }
-      final needAddDns = '223.5.5.5';
+      final needAddDns = managedDns;
       if (originDns.contains(needAddDns)) {
         return;
       }
@@ -419,6 +438,171 @@ class MacOS {
       if (nextDns.isNotEmpty) ...nextDns,
       if (nextDns.isEmpty) 'Empty',
     ]);
+  }
+
+  Future<List<String>> _networkServiceNames() async {
+    final result = await Process.run('/usr/sbin/networksetup', [
+      '-listallnetworkservices',
+    ]);
+    if (result.exitCode != 0) {
+      return [];
+    }
+    return result.stdout
+        .toString()
+        .split('\n')
+        .map((line) => line.trim())
+        .where(
+          (line) =>
+              line.isNotEmpty &&
+              !line.startsWith('An asterisk') &&
+              !line.startsWith('*'),
+        )
+        .toList();
+  }
+
+  Future<ProcessResult?> _runNetworkCommand(
+    String executable,
+    List<String> arguments,
+  ) async {
+    try {
+      return await Process.run(
+        executable,
+        arguments,
+      ).timeout(const Duration(seconds: 5));
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<MacOSNetworkCleanupResult> cleanupNetworkAfterCoreStop() async {
+    final serviceName = await defaultServiceName;
+    final services = await _networkServiceNames();
+    final issues = <String>[];
+
+    if (serviceName == null) {
+      issues.add('无法识别默认网络服务');
+    }
+    if (services.isEmpty) {
+      issues.add('无法读取网络服务列表');
+    }
+
+    for (final service in services) {
+      for (final command in const [
+        '-setautoproxystate',
+        '-setwebproxystate',
+        '-setsecurewebproxystate',
+        '-setsocksfirewallproxystate',
+      ]) {
+        final result = await _runNetworkCommand('/usr/sbin/networksetup', [
+          command,
+          service,
+          'off',
+        ]);
+        if (result == null || result.exitCode != 0) {
+          issues.add('关闭 $service 的 $command 失败');
+        }
+      }
+    }
+
+    if (serviceName != null) {
+      final resetResult = await _runNetworkCommand('/usr/sbin/networksetup', [
+        '-setdnsservers',
+        serviceName,
+        'Empty',
+      ]);
+      if (resetResult == null || resetResult.exitCode != 0) {
+        issues.add('重置 $serviceName 的 DNS 失败');
+      }
+    }
+
+    await _runNetworkCommand('/usr/bin/dscacheutil', ['-flushcache']);
+    await _runNetworkCommand('/usr/bin/killall', ['-HUP', 'mDNSResponder']);
+
+    for (final service in services) {
+      for (final command in const [
+        '-getwebproxy',
+        '-getsecurewebproxy',
+        '-getsocksfirewallproxy',
+      ]) {
+        final result = await _runNetworkCommand('/usr/sbin/networksetup', [
+          command,
+          service,
+        ]);
+        if (result == null || result.exitCode != 0) {
+          issues.add('验证 $service 的 $command 失败');
+          continue;
+        }
+        if (isProxyEnabledOutput(result.stdout.toString())) {
+          issues.add('$service 的代理仍处于开启状态');
+        }
+      }
+    }
+
+    if (serviceName != null) {
+      final dnsResult = await _runNetworkCommand('/usr/sbin/networksetup', [
+        '-getdnsservers',
+        serviceName,
+      ]);
+      if (dnsResult == null || dnsResult.exitCode != 0) {
+        issues.add('验证 $serviceName 的 DNS 失败');
+      } else if (!isDnsResetOutput(dnsResult.stdout.toString())) {
+        issues.add('$serviceName 仍存在手工 DNS');
+      }
+    }
+
+    for (var attempt = 0; attempt < 6; attempt++) {
+      final ifconfig = await _runNetworkCommand('/sbin/ifconfig', []);
+      final hasFakeIpInterface =
+          ifconfig?.stdout.toString().contains('inet 198.18.0.1') == true;
+      if (!hasFakeIpInterface) {
+        break;
+      }
+      if (attempt == 5) {
+        issues.add('FlClash Fake-IP 虚拟网卡仍未释放');
+        break;
+      }
+      await Future.delayed(const Duration(milliseconds: 300));
+    }
+
+    return MacOSNetworkCleanupResult(
+      serviceName: serviceName ?? 'Wi-Fi',
+      issues: issues.toSet().toList(),
+    );
+  }
+}
+
+class MacOSNetworkCleanupResult {
+  final String serviceName;
+  final List<String> issues;
+
+  const MacOSNetworkCleanupResult({
+    required this.serviceName,
+    required this.issues,
+  });
+
+  bool get success => issues.isEmpty;
+
+  String get manualResetCommands {
+    final service = _shellQuote(serviceName);
+    return [
+      'sudo /usr/sbin/networksetup -setdnsservers $service Empty',
+      'sudo /usr/bin/dscacheutil -flushcache',
+      'sudo /usr/bin/killall -HUP mDNSResponder',
+    ].join('\n');
+  }
+
+  String get verificationCommands {
+    final service = _shellQuote(serviceName);
+    return [
+      '/usr/sbin/networksetup -getdnsservers $service',
+      "/usr/sbin/scutil --dns | /usr/bin/sed -n '1,80p'",
+      '/usr/sbin/scutil --proxy',
+      '/sbin/route -n get 8.8.8.8',
+    ].join('\n');
+  }
+
+  static String _shellQuote(String value) {
+    return "'${value.replaceAll("'", "'\\\"'\\\"'")}'";
   }
 }
 

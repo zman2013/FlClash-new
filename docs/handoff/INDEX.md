@@ -18,6 +18,9 @@ Status: bootstrap (2026-06-23)
 
 ## 已结案功能线
 
+- [macOS FlClash 公司内网 DNS 与 Fake-IP 排障](./2026-07-macos-corporate-intranet-dns-fake-ip.md)
+  覆盖 TUN DNS 劫持、Fake-IP 多级域名匹配、公司 DNS 绑定 `en0`、Nameserver 策略顺序和 Gerrit HTTPS 验收。
+
 - [macOS 代理控制与流量统计功能线](./2026-06-macos-proxy-traffic-release.md)  
   覆盖流量统计 JSONL、域名代理独立入口、按应用选择代理、macOS release 构建、安装与 GitHub Release 发布。
 

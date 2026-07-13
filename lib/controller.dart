@@ -10,6 +10,7 @@ import 'package:fl_clash/widgets/dialog.dart';
 import 'package:fl_clash/widgets/input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'common/common.dart';
@@ -21,6 +22,7 @@ class AppController {
   late final BuildContext _context;
   late final WidgetRef _ref;
   bool isAttach = false;
+  bool _isExiting = false;
 
   static AppController? _instance;
 
@@ -1030,21 +1032,166 @@ extension SystemControllerExt on AppController {
     return _ref.read(packagesProvider);
   }
 
-  Future<void> handleExit([bool needSave = false]) async {
-    Future.delayed(Duration(seconds: 3), () {
-      system.exit();
-    });
+  Future<MacOSNetworkCleanupResult> _attemptMacOSExitCleanup() async {
+    final serviceName = await macOS!.defaultServiceName ?? 'Wi-Fi';
+    final issues = <String>[];
     try {
-      await Future.wait([
-        if (needSave) preferences.saveConfig(config),
-        if (macOS != null) macOS!.updateDns(true),
-        if (proxy != null) proxy!.stopProxy(),
-        if (tray != null) tray!.destroy(),
-      ]);
+      final stopped = await proxy?.stopProxy();
+      if (stopped == false) {
+        issues.add('关闭系统代理失败');
+      }
+    } catch (e) {
+      issues.add('关闭系统代理失败：$e');
+    }
+    try {
+      await coreController.shutdown(true).timeout(const Duration(seconds: 5));
+    } catch (e) {
+      issues.add('停止 FlClash Core 失败：$e');
+    }
+    try {
+      final result = await macOS!.cleanupNetworkAfterCoreStop();
+      issues.addAll(result.issues);
+      return MacOSNetworkCleanupResult(
+        serviceName: result.serviceName,
+        issues: issues.toSet().toList(),
+      );
+    } catch (e) {
+      issues.add('重置并验证系统网络失败：$e');
+      return MacOSNetworkCleanupResult(
+        serviceName: serviceName,
+        issues: issues.toSet().toList(),
+      );
+    }
+  }
+
+  Future<_ExitCleanupAction> _showExitCleanupFailure(
+    MacOSNetworkCleanupResult result,
+  ) async {
+    final action = await globalState.showCommonDialog<_ExitCleanupAction>(
+      dismissible: false,
+      child: Builder(
+        builder: (context) {
+          Widget commandBlock(String title, String commands) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: context.textTheme.titleSmall),
+                const SizedBox(height: 6),
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: context.colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: SelectableText(
+                      commands,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        fontFamily: 'JetBrainsMono',
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
+
+          Future<void> copyCommands(String commands) async {
+            await Clipboard.setData(ClipboardData(text: commands));
+            if (context.mounted) {
+              context.showNotifier(appLocalizations.copySuccess);
+            }
+          }
+
+          return CommonDialog(
+            title: '网络清理失败',
+            actions: [
+              TextButton(
+                onPressed: () => copyCommands(result.manualResetCommands),
+                child: const Text('复制重置命令'),
+              ),
+              TextButton(
+                onPressed: () => copyCommands(result.verificationCommands),
+                child: const Text('复制验证命令'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(_ExitCleanupAction.retry);
+                },
+                child: const Text('重试清理'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(_ExitCleanupAction.forceExit);
+                },
+                child: const Text('仍然退出'),
+              ),
+            ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('FlClash 未能完整恢复系统网络：'),
+                const SizedBox(height: 8),
+                for (final issue in result.issues) Text('• $issue'),
+                const SizedBox(height: 16),
+                commandBlock('手动重置 DNS', result.manualResetCommands),
+                const SizedBox(height: 16),
+                commandBlock('验证命令', result.verificationCommands),
+                const SizedBox(height: 12),
+                const Text('可先复制并在终端执行命令，然后点击“重试清理”。'),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+    return action ?? _ExitCleanupAction.forceExit;
+  }
+
+  Future<void> handleExit([bool needSave = false]) async {
+    if (_isExiting) {
+      return;
+    }
+    _isExiting = true;
+    try {
+      if (needSave) {
+        await preferences.saveConfig(config);
+      }
+      if (macOS != null) {
+        while (true) {
+          final result = await _attemptMacOSExitCleanup();
+          if (result.success) {
+            break;
+          }
+          final action = await _showExitCleanupFailure(result);
+          if (action == _ExitCleanupAction.forceExit) {
+            break;
+          }
+        }
+      } else {
+        await proxy?.stopProxy();
+      }
+      await tray?.destroy();
       await coreController.destroy();
       commonPrint.log('exit');
-    } finally {
-      system.exit();
+      await system.exit();
+    } catch (e, stackTrace) {
+      commonPrint.log(
+        'exit cleanup failed: $e stack: $stackTrace',
+        logLevel: LogLevel.warning,
+      );
+      if (macOS != null) {
+        final result = MacOSNetworkCleanupResult(
+          serviceName: await macOS!.defaultServiceName ?? 'Wi-Fi',
+          issues: ['退出清理异常：$e'],
+        );
+        final action = await _showExitCleanupFailure(result);
+        if (action == _ExitCleanupAction.retry) {
+          _isExiting = false;
+          return handleExit(needSave);
+        }
+      }
+      await system.exit();
     }
   }
 
@@ -1146,6 +1293,8 @@ extension SystemControllerExt on AppController {
     _ref.read(localIpProvider.notifier).value = await utils.getLocalIpAddress();
   }
 }
+
+enum _ExitCleanupAction { retry, forceExit }
 
 extension BackupControllerExt on AppController {
   Future<void> shakingStore() async {
