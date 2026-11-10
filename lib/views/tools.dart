@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/controller.dart';
+import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/l10n/l10n.dart';
 import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/providers/providers.dart';
@@ -33,7 +34,10 @@ class _ToolViewState extends ConsumerState<ToolsView> {
     return ListItem.open(
       leading: navigationItem.icon,
       title: Text(Intl.message(navigationItem.label.name)),
-      subtitle: navigationItem.description != null
+      subtitle:
+          system.isAndroid && navigationItem.label == PageLabel.trafficAnalysis
+          ? const Text('查看近七天的代理流量及各 App 用量')
+          : navigationItem.description != null
           ? Text(Intl.message(navigationItem.description!))
           : null,
       delegate: OpenDelegate(widget: navigationItem.builder(context)),

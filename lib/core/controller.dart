@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:fl_clash/common/common.dart';
+import 'package:fl_clash/common/weekly_traffic.dart';
 import 'package:fl_clash/core/core.dart';
 import 'package:fl_clash/core/interface.dart';
 import 'package:fl_clash/enum/enum.dart';
@@ -126,6 +127,10 @@ class CoreController {
   Future<List<TrackerInfo>> getConnections() async {
     final res = await _interface.getConnections();
     final connectionsData = json.decode(res) as Map;
+    final history = connectionsData['trafficHistory'];
+    if (system.isAndroid && history is Map) {
+      weeklyTrafficStore.replaceFromCore(history);
+    }
     final connectionsRaw = connectionsData['connections'] as List? ?? [];
     return connectionsRaw.map((e) => TrackerInfo.fromJson(e)).toList();
   }

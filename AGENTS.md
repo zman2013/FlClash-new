@@ -136,3 +136,14 @@ build/macos/Build/Products/Release/FlClash.app
 4. 跑 `build_runner`。
 5. 跑定向 `flutter analyze`。
 6. 若涉及 macOS 功能，再跑一次 macOS build。
+
+## Android 真机开发与本机依赖复用
+
+用户明确要求 Android 功能时，可以修改并验证 Android；本机已有可用构建环境，不要重新搭建。
+
+- **先读 `docs/development/android-local-build.md`**：记录了核验过的 SDK/JDK/NDK/CMake、Gradle/Dart 缓存、原生代理内核路径、离线构建及覆盖安装命令。
+- Flutter：`/Users/manzhiyuan/flutter-sdk/bin/flutter`；JDK：`/opt/homebrew/opt/openjdk@17`；Android SDK：`/opt/homebrew/share/android-commandlinetools`。
+- 优先复用 `android/local.properties`、`libclash/android/`、现有 `build/` 与全局缓存；不要以 `flutter clean`、删除缓存、升级依赖或重新下载内核作为常规起点。
+- Dart 依赖未变时优先 `flutter build apk --debug --no-pub --target-platform android-arm64`；需要禁止 Gradle 联网时，按文档用 `./gradlew :app:assembleDebug --offline`。缓存缺失应按错误补齐，不能仅凭 SDK 已安装就假定所有 Gradle 构件均可离线使用。
+- debug 包名 `com.go.class.dev`；覆盖安装保留手机配置和流量历史，不得通过卸载旧应用处理安装失败。
+- Android 周报的权威数据源是 Go 内核 `proxy-traffic-history.json`，Flutter 只读取，不能再叠加连接采样值。修改内核后先执行 `scripts/build_android_core_local.sh`，再按离线流程打包；该脚本复用 Go/NDK 缓存并使用子模块中已提交的统计钩子。详见上述依赖文档的“代理流量采集内核”。

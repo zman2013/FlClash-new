@@ -45,6 +45,7 @@ func handleInitClash(paramsString string) bool {
 	}
 	version = params.Version
 	constant.SetHomeDir(params.HomeDir)
+	initTrafficHistory(params.HomeDir)
 	isInit = true
 	return isInit
 }
@@ -82,6 +83,7 @@ func handleForceGC() {
 func handleShutdown() bool {
 	stopListeners()
 	executor.Shutdown()
+	flushTrafficHistory()
 	handleForceGC()
 	isInit = false
 	return true
@@ -273,7 +275,15 @@ func handleGetConnections() string {
 	runLock.Lock()
 	defer runLock.Unlock()
 	snapshot := statistic.DefaultManager.Snapshot()
-	data, err := json.Marshal(snapshot)
+	// Return the authoritative background history with the existing IPC snapshot.
+	var history any
+	if store := proxyTrafficHistory.Load(); store != nil {
+		history = store.Snapshot(trafficHistoryNow())
+	}
+	data, err := json.Marshal(struct {
+		*statistic.Snapshot
+		TrafficHistory any `json:"trafficHistory,omitempty"`
+	}{snapshot, history})
 	if err != nil {
 		log.Errorln("Error: %s", err)
 		return ""

@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'widgets/start_button.dart';
+import 'widgets/weekly_traffic.dart';
 
 typedef _IsEditWidgetBuilder = Widget Function(bool isEdit);
 
@@ -289,11 +290,16 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
                       },
                     ),
                   )
-                : Grid(
-                    crossAxisCount: columns,
-                    crossAxisSpacing: spacing,
-                    mainAxisSpacing: spacing,
-                    children: children,
+                : Column(
+                    children: [
+                      Grid(
+                        crossAxisCount: columns,
+                        crossAxisSpacing: spacing,
+                        mainAxisSpacing: spacing,
+                        children: children,
+                      ),
+                      if (system.isAndroid) const WeeklyTraffic(),
+                    ],
                   ),
           ),
         ),

@@ -9,6 +9,7 @@ import 'package:fl_clash/models/models.dart';
 import 'package:flutter/foundation.dart';
 
 import 'path.dart';
+import 'weekly_traffic.dart';
 
 class TrafficAnalysisStore extends ValueNotifier<TrafficAnalysisSnapshot> {
   static const window = Duration(hours: 1);
@@ -27,6 +28,7 @@ class TrafficAnalysisStore extends ValueNotifier<TrafficAnalysisSnapshot> {
 
   void setAppLabels(Map<String, String> appLabels) {
     _appLabels = appLabels;
+    if (Platform.isAndroid) weeklyTrafficStore.setAppLabels(appLabels);
   }
 
   void recordActiveConnections(List<TrackerInfo> connections) {
