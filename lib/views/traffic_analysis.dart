@@ -2,6 +2,7 @@ import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'dashboard/widgets/weekly_traffic.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
@@ -57,43 +58,48 @@ class TrafficAnalysisView extends StatelessWidget {
   Widget build(BuildContext context) {
     return CommonScaffold(
       title: _trafficAnalysisText(),
-      actions: _buildActions(),
-      body: ValueListenableBuilder<TrafficAnalysisSnapshot>(
-        valueListenable: trafficAnalysisStore,
-        builder: (_, snapshot, _) {
-          return DefaultTabController(
-            length: 2,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _TrafficSummary(snapshot: snapshot),
-                const Divider(height: 0),
-                const _TrafficLogPath(),
-                TabBar(
-                  tabs: [
-                    Tab(text: _trafficAnalysisByAppText()),
-                    Tab(text: _trafficAnalysisByDestinationText()),
-                  ],
-                ),
-                Expanded(
-                  child: TabBarView(
+      actions: system.isAndroid ? const [] : _buildActions(),
+      body: system.isAndroid
+          ? const SingleChildScrollView(
+              padding: EdgeInsets.all(16),
+              child: WeeklyTraffic(),
+            )
+          : ValueListenableBuilder<TrafficAnalysisSnapshot>(
+              valueListenable: trafficAnalysisStore,
+              builder: (_, snapshot, _) {
+                return DefaultTabController(
+                  length: 2,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      _TrafficAnalysisList(
-                        icon: Icons.apps,
-                        items: snapshot.appItems,
+                      _TrafficSummary(snapshot: snapshot),
+                      const Divider(height: 0),
+                      const _TrafficLogPath(),
+                      TabBar(
+                        tabs: [
+                          Tab(text: _trafficAnalysisByAppText()),
+                          Tab(text: _trafficAnalysisByDestinationText()),
+                        ],
                       ),
-                      _TrafficAnalysisList(
-                        icon: Icons.language,
-                        items: snapshot.destinationItems,
+                      Expanded(
+                        child: TabBarView(
+                          children: [
+                            _TrafficAnalysisList(
+                              icon: Icons.apps,
+                              items: snapshot.appItems,
+                            ),
+                            _TrafficAnalysisList(
+                              icon: Icons.language,
+                              items: snapshot.destinationItems,
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
-                ),
-              ],
+                );
+              },
             ),
-          );
-        },
-      ),
     );
   }
 }
