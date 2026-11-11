@@ -42,7 +42,12 @@ class _TrafficAnalysisManagerState
       });
     }, fireImmediately: true);
     if (system.isMacOS || system.isAndroid) {
-      _timer = Timer.periodic(const Duration(seconds: 1), (_) => _poll());
+      _timer = Timer.periodic(
+        system.isAndroid
+            ? androidConnectionPollingInterval
+            : const Duration(seconds: 1),
+        (_) => _poll(),
+      );
       unawaited(_poll());
     }
   }
