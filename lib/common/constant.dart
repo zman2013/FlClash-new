@@ -40,6 +40,8 @@ const animateDuration = Duration(milliseconds: 100);
 const midDuration = Duration(milliseconds: 200);
 const commonDuration = Duration(milliseconds: 300);
 const defaultUpdateDuration = Duration(days: 1);
+// UI connection queries only; the proxy core accounts for traffic independently.
+const androidConnectionPollingInterval = Duration(minutes: 10);
 const MMDB = 'GEOIP.metadb';
 const ASN = 'ASN.mmdb';
 const GEOIP = 'GEOIP.dat';
