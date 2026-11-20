@@ -177,6 +177,11 @@ func nextHandle(action *Action, result ActionResult) bool {
 		handleUpdateDns(data)
 		result.success(true)
 		return true
+	case refreshAutomaticProxiesMethod:
+		networkChanged, _ := action.Data.(bool)
+		handleRefreshAutomaticProxies(networkChanged)
+		result.success(true)
+		return true
 	}
 	return false
 }

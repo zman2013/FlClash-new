@@ -65,6 +65,10 @@ data object Core {
         suspended: Boolean,
     )
 
+    fun refreshAutomaticProxies(networkChanged: Boolean) {
+        invokeAction("""{"method":"refreshAutomaticProxies","data":$networkChanged}""") {}
+    }
+
     private external fun invokeAction(
         data: String,
         cb: InvokeInterface

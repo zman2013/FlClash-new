@@ -101,6 +101,7 @@ const (
 	startListenerMethod            Method = "startListener"
 	stopListenerMethod             Method = "stopListener"
 	updateDnsMethod                Method = "updateDns"
+	refreshAutomaticProxiesMethod  Method = "refreshAutomaticProxies"
 	crashMethod                    Method = "crash"
 	setupConfigMethod              Method = "setupConfig"
 	getConfigMethod                Method = "getConfig"
