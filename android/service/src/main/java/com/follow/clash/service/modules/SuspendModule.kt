@@ -33,6 +33,7 @@ class SuspendModule(private val service: Service) : Module() {
     private fun onUpdate(isScreenOn: Boolean) {
         if (isScreenOn) {
             Core.suspended(false)
+            Core.refreshAutomaticProxies(networkChanged = false)
             return
         }
         Core.suspended(isDeviceIdleMode)

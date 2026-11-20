@@ -442,6 +442,18 @@ func handleSuspend(suspended bool) bool {
 	return true
 }
 
+func handleRefreshAutomaticProxies(networkChanged bool) {
+	go func() {
+		runLock.Lock()
+		defer runLock.Unlock()
+		for _, proxy := range tunnel.Proxies() {
+			if group, ok := proxy.Adapter().(*outboundgroup.URLTest); ok {
+				group.RefreshAndroid(networkChanged)
+			}
+		}
+	}()
+}
+
 func handleStartLog() {
 	if logSubscriber != nil {
 		log.UnSubscribe(logSubscriber)
